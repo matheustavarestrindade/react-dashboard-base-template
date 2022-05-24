@@ -1,26 +1,47 @@
-import React from 'react';
-import logo from './logo.svg';
-import './App.css';
-
+import React from "react";
+import ThemeProvider from "./context/ThemeProvider";
+import UserProvider from "./context/UserProvider";
+import LanguageProvider from "./context/LanguageProvider";
+import PageNavigationProvider from "./context/PageNavigationProvider";
+import { faCog, faDashboard, faUser } from "@fortawesome/free-solid-svg-icons";
+import { BrowserRouter } from "react-router-dom";
 function App() {
-  return (
-    <div className="App">
-      <header className="App-header">
-        <img src={logo} className="App-logo" alt="logo" />
-        <p>
-          Edit <code>src/App.tsx</code> and save to reload.
-        </p>
-        <a
-          className="App-link"
-          href="https://reactjs.org"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          Learn React
-        </a>
-      </header>
-    </div>
-  );
+    return (
+        <ThemeProvider>
+            <UserProvider>
+                <LanguageProvider>
+                    <BrowserRouter>
+                        <PageNavigationProvider
+                            topbar_icons={[
+                                {
+                                    icon: faUser,
+                                    to: "/user",
+                                },
+                                {
+                                    icon: faCog,
+                                    to: "/configuration",
+                                },
+                            ]}
+                            sidebar_icons={[
+                                {
+                                    name: "Navigation",
+                                    icons: [
+                                        {
+                                            icon: faDashboard,
+                                            to: "/",
+                                            description: "Dashboard",
+                                        },
+                                    ],
+                                },
+                            ]}
+                        >
+                            <h1>Page content</h1>
+                        </PageNavigationProvider>
+                    </BrowserRouter>
+                </LanguageProvider>
+            </UserProvider>
+        </ThemeProvider>
+    );
 }
 
 export default App;

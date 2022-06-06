@@ -1,31 +1,34 @@
 import { createContext, useContext, useState } from "react";
-import { AppShell, Box, Burger, createStyles, Header, MediaQuery, Navbar, ScrollArea, ThemeIcon } from "@mantine/core";
+import { AppShell, Box, Burger, createStyles, Header, MediaQuery, Navbar } from "@mantine/core";
 import TopbarIcon from "../components/TopbarIcon";
-import { faEarthAmerica, IconDefinition } from "@fortawesome/free-solid-svg-icons";
+import { IconDefinition } from "@fortawesome/free-solid-svg-icons";
 import { Link } from "react-router-dom";
-import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import useTranslation from "../hooks/useTranslation";
 
 const PageNavigationContext = createContext({});
+
+const SIDEBAR_SM_WIDTH = 250;
+const SIDEBAR_LG_WIDTH = 350;
 
 export const usePageNavigation = () => {
     return useContext(PageNavigationContext);
 };
 
-interface NavigationItem {
+export interface NavigationItem {
     icon: IconDefinition;
     to: string;
     description?: string;
 }
 
-interface NavigationPage {
+export interface NavigationPage {
     name: string;
     icons?: NavigationItem[];
 }
 
 interface NavigationProps {
     children?: React.ReactNode;
-    topbar_icons?: NavigationItem[];
+    topbar_icons_right?: NavigationItem[];
+    topbar_icons_left?: NavigationItem[];
     sidebar_icons?: NavigationPage[];
 }
 
@@ -42,23 +45,25 @@ const useStyles = createStyles((theme, args, getRef) => ({
     sidebar_item: {
         display: "flex",
         alignItems: "center",
-        color: theme.colorScheme === "light" ? theme.colors.dark[4] : theme.colors.gray[1],
+        color: theme.colors["dark-gray"][0],
         justifyContent: "start",
         transition: "0.2s",
         textDecoration: "none",
         borderLeft: "5px solid transparent",
+        fontWeight: 500,
         paddingLeft: "0.4rem",
         ".description": {
             paddingLeft: "0.5rem",
         },
         [`& .${getRef("icon")}`]: {
             borderRadius: "5px",
-            width: "30px",
-            height: "30px",
-            backgroundColor: theme.colorScheme === "light" ? theme.colors.gray[5] : theme.colors.gray[1],
-            shadow: theme.shadows.lg,
+            width: "32px",
+            height: "32px",
+            backgroundColor: "transparent",
             svg: {
-                color: theme.colorScheme === "light" ? theme.colors.gray[0] : theme.colors.gray[0],
+                width: "18px",
+                height: "18px",
+                color: theme.colors["dark-gray"][0],
             },
         },
 
@@ -78,30 +83,49 @@ const useStyles = createStyles((theme, args, getRef) => ({
             },
         },
     },
-    topbar_title: {
+    topbar_icons_left: {
         marginRight: "auto",
         marginLeft: "1rem",
-        [`@media (max-width: ${theme.breakpoints.sm}px)`]: {
-            // Type safe child reference in nested selectors via ref
-            marginLeft: "0",
-        },
-        svg: {
-            paddingRight: "0.5rem",
-            fontSize: "1.2rem",
-        },
-        color: theme.colorScheme === "light" ? theme.colors.dark[4] : theme.colors.gray[1],
+        display: "flex",
+        alignItems: "center",
+    },
+    topbar_icons_right: {
+        marginRight: "1rem",
+        marginLeft: "auto",
+        display: "flex",
+        alignItems: "center",
     },
     header_styles: {
-        borderColor: theme.colors.dark[1],
+        borderBottom: "2px solid " + theme.colors["light-gray"][2],
+        [`@media (min-width: ${theme.breakpoints.sm}px)`]: {
+            // Type safe child reference in nested selectors via ref
+            width: "calc(100vw - " + SIDEBAR_SM_WIDTH + "px)",
+            left: SIDEBAR_SM_WIDTH,
+        },
+        [`@media (min-width: ${theme.breakpoints.lg}px)`]: {
+            // Type safe child reference in nested selectors via ref
+            width: "calc(100vw - " + SIDEBAR_LG_WIDTH + "px)",
+            left: SIDEBAR_LG_WIDTH,
+        },
     },
     sidebar_styles: {
-        borderColor: theme.colors.dark[1],
+        borderRight: "2px solid " + theme.colors["light-gray"][2],
+
         height: "100vh",
         top: 0,
+        ".navbar-logo": {
+            marginTop: "0.5rem",
+            img: {
+                maxWidth: "100%",
+                maxHeight: 60,
+                display: "flex",
+                margin: "auto",
+            },
+        },
     },
 }));
 
-const PageNavigationProvider = ({ children, topbar_icons, sidebar_icons }: NavigationProps) => {
+const PageNavigationProvider = ({ children, topbar_icons_right, topbar_icons_left, sidebar_icons }: NavigationProps) => {
     const [navbarOpened, setNarbarOpened] = useState<boolean>(false);
     const [value, setValue] = useState<any>();
     const { t } = useTranslation();
@@ -112,7 +136,10 @@ const PageNavigationProvider = ({ children, topbar_icons, sidebar_icons }: Navig
             <AppShell
                 navbarOffsetBreakpoint="sm"
                 navbar={
-                    <Navbar className={classes.sidebar_styles} hiddenBreakpoint="sm" hidden={!navbarOpened} width={{ sm: 250, lg: 350 }}>
+                    <Navbar className={classes.sidebar_styles} hiddenBreakpoint="sm" hidden={!navbarOpened} width={{ sm: SIDEBAR_SM_WIDTH, lg: SIDEBAR_LG_WIDTH }}>
+                        <div className="navbar-logo">
+                            <img src="/home_quasar_logo.png" alt="" />
+                        </div>
                         {sidebar_icons &&
                             sidebar_icons.map((navigationPage, id) => {
                                 if (!navigationPage.icons) {
@@ -144,25 +171,31 @@ const PageNavigationProvider = ({ children, topbar_icons, sidebar_icons }: Navig
                 }
                 header={
                     <Header height={60} className={classes.header_styles}>
-                        <div style={{ display: "flex", alignItems: "center", justifyContent: "end", height: "100%", paddingRight: "1rem" }}>
+                        <div style={{ display: "flex", alignItems: "center", justifyContent: "end", height: "100%" }}>
                             <MediaQuery largerThan="sm" styles={{ display: "none" }}>
                                 <Burger opened={navbarOpened} style={{ marginLeft: "1rem", marginRight: "1rem" }} onClick={() => setNarbarOpened((o) => !o)} size="sm" mr="xl" />
                             </MediaQuery>
-                            <Box className={classes.topbar_title}>
-                                <FontAwesomeIcon icon={faEarthAmerica}></FontAwesomeIcon>
-                                <span>{t("topbar.title")}</span>
+                            <Box className={classes.topbar_icons_left}>
+                                {topbar_icons_left &&
+                                    topbar_icons_left.map((navigationIcon, id) => (
+                                        <Link to={navigationIcon.to} key={id} style={{ marginRight: "1rem" }}>
+                                            <TopbarIcon icon={navigationIcon.icon} />
+                                        </Link>
+                                    ))}
                             </Box>
-                            {topbar_icons &&
-                                topbar_icons.map((navigationIcon, id) => (
-                                    <Link to={navigationIcon.to} key={id} style={{ marginLeft: "1rem" }}>
-                                        <TopbarIcon icon={navigationIcon.icon} />
-                                    </Link>
-                                ))}
+                            <Box className={classes.topbar_icons_right}>
+                                {topbar_icons_right &&
+                                    topbar_icons_right.map((navigationIcon, id) => (
+                                        <Link to={navigationIcon.to} key={id} style={{ marginLeft: "1rem" }}>
+                                            <TopbarIcon icon={navigationIcon.icon} />
+                                        </Link>
+                                    ))}
+                            </Box>
                         </div>
                     </Header>
                 }
                 styles={(theme) => ({
-                    main: { backgroundColor: theme.colorScheme === "dark" ? theme.colors.dark[6] : theme.colors.gray[0] },
+                    main: { backgroundColor: theme.colorScheme === "dark" ? theme.colors.dark[6] : theme.colors["light-gray"][0] },
                 })}
                 fixed
             >

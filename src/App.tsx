@@ -12,7 +12,7 @@ function App() {
                 <LanguageProvider>
                     <BrowserRouter>
                         <PageNavigationProvider
-                            topbar_icons={[
+                            topbar_icons_right={[
                                 {
                                     icon: faUser,
                                     to: "/user",

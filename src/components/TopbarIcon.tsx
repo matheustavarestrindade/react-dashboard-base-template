@@ -13,12 +13,11 @@ const useStyles = createStyles((theme, args, getRef) => ({
         height: "40px",
         display: "flex",
         alignItems: "center",
-        backgroundColor: theme.colorScheme === "light" ? theme.colors.dark[1] : theme.colors.gray[1],
-        color: theme.colorScheme === "light" ? theme.colors.gray[0] : theme.colors.dark[4],
+        backgroundColor: theme.colors["light-gray"][1],
+        color: theme.colors["dark-gray"][0],
         justifyContent: "center",
         borderRadius: "50%",
         transition: "0.2s",
-        boxShadow: theme.shadows.md,
         "&:hover": {
             backgroundColor: theme.colorScheme === "light" ? theme.colors.blue[4] : theme.colors.grape[9],
             svg: {
@@ -27,7 +26,7 @@ const useStyles = createStyles((theme, args, getRef) => ({
             },
         },
         svg: {
-            color: theme.colorScheme === "light" ? theme.colors.gray[0] : theme.colors.dark[4],
+            color: theme.colors["dark-gray"][0],
         },
     },
 }));

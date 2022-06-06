@@ -20,10 +20,14 @@ const useStyles = createStyles((theme, args, getRef) => ({
         transition: "0.2s",
         boxShadow: theme.shadows.md,
         "&:hover": {
-            backgroundColor: theme.colorScheme === "light" ? theme.colors.blue[4] : theme.colors.blue[4],
+            backgroundColor: theme.colorScheme === "light" ? theme.colors.blue[4] : theme.colors.grape[9],
+            svg: {
+                transition: "0.2s",
+                color: theme.colorScheme === "light" ? theme.colors.gray[0] : theme.colors.gray[0],
+            },
         },
         svg: {
-            color: theme.colors.gray[0],
+            color: theme.colorScheme === "light" ? theme.colors.gray[0] : theme.colors.dark[4],
         },
     },
 }));

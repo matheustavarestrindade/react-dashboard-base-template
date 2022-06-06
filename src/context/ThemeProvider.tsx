@@ -5,7 +5,11 @@ interface Props {
 }
 
 const ThemeProvider = ({ children }: Props) => {
-    return <MantineProvider theme={{}}>{children}</MantineProvider>;
+    return (
+        <MantineProvider theme={{ colorScheme: "light" }} withNormalizeCSS withGlobalStyles>
+            {children}
+        </MantineProvider>
+    );
 };
 
 export default ThemeProvider;

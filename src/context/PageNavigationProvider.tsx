@@ -37,11 +37,12 @@ const useStyles = createStyles((theme, args, getRef) => ({
         paddingTop: "1rem",
         paddingBottom: "1rem",
         margin: 0,
+        color: theme.colorScheme === "light" ? theme.colors.dark[4] : theme.colors.gray[1],
     },
     sidebar_item: {
         display: "flex",
         alignItems: "center",
-        color: theme.colorScheme === "light" ? theme.colors.dark[4] : theme.colors.gray[0],
+        color: theme.colorScheme === "light" ? theme.colors.dark[4] : theme.colors.gray[1],
         justifyContent: "start",
         transition: "0.2s",
         textDecoration: "none",
@@ -50,16 +51,31 @@ const useStyles = createStyles((theme, args, getRef) => ({
         ".description": {
             paddingLeft: "0.5rem",
         },
+        [`& .${getRef("icon")}`]: {
+            borderRadius: "5px",
+            width: "30px",
+            height: "30px",
+            backgroundColor: theme.colorScheme === "light" ? theme.colors.gray[5] : theme.colors.gray[1],
+            shadow: theme.shadows.lg,
+            svg: {
+                color: theme.colorScheme === "light" ? theme.colors.gray[0] : theme.colors.gray[0],
+            },
+        },
+
         "&:hover": {
             paddingLeft: "0.7rem",
             [`& .${getRef("icon")}`]: {
                 transition: "0.2s",
-                backgroundColor: theme.colorScheme === "light" ? theme.colors.blue[4] : theme.colors.blue[4],
+                backgroundColor: theme.colorScheme === "light" ? theme.colors.blue[4] : theme.colors.grape[9],
             },
             [`@media (min-width: ${theme.breakpoints.sm}px)`]: {
-                borderLeft: "5px solid " + (theme.colorScheme === "light" ? theme.colors.blue[4] : theme.colors.blue[4]),
+                borderLeft: "5px solid " + (theme.colorScheme === "light" ? theme.colors.blue[4] : theme.colors.grape[9]),
             },
-            color: theme.colorScheme === "light" ? theme.colors.blue[4] : theme.colors.blue[4],
+            color: theme.colorScheme === "light" ? theme.colors.blue[4] : theme.colors.grape[9],
+            svg: {
+                transition: "0.2s",
+                color: theme.colorScheme === "light" ? theme.colors.gray[0] : theme.colors.gray[0],
+            },
         },
     },
     topbar_title: {
@@ -73,12 +89,15 @@ const useStyles = createStyles((theme, args, getRef) => ({
             paddingRight: "0.5rem",
             fontSize: "1.2rem",
         },
+        color: theme.colorScheme === "light" ? theme.colors.dark[4] : theme.colors.gray[1],
     },
     header_styles: {
         borderColor: theme.colors.dark[1],
     },
     sidebar_styles: {
         borderColor: theme.colors.dark[1],
+        height: "100vh",
+        top: 0,
     },
 }));
 
@@ -142,6 +161,9 @@ const PageNavigationProvider = ({ children, topbar_icons, sidebar_icons }: Navig
                         </div>
                     </Header>
                 }
+                styles={(theme) => ({
+                    main: { backgroundColor: theme.colorScheme === "dark" ? theme.colors.dark[6] : theme.colors.gray[0] },
+                })}
                 fixed
             >
                 {children}

@@ -1,14 +1,16 @@
-import { createContext, useContext, useState } from "react";
+import { createContext, useContext, useEffect, useState } from "react";
 import { AppShell, Box, Burger, createStyles, Header, MediaQuery, Navbar } from "@mantine/core";
 import TopbarIcon from "../components/TopbarIcon";
 import { IconDefinition } from "@fortawesome/free-solid-svg-icons";
-import { Link } from "react-router-dom";
+import { Link, useLocation } from "react-router-dom";
 import useTranslation from "../hooks/useTranslation";
+import { useMediaQuery } from "@mantine/hooks";
 
 const PageNavigationContext = createContext({});
 
 const SIDEBAR_SM_WIDTH = 250;
 const SIDEBAR_LG_WIDTH = 350;
+const SIDEBAR_JUST_ICONS_WIDTH = 58;
 
 export const usePageNavigation = () => {
     return useContext(PageNavigationContext);
@@ -32,7 +34,7 @@ interface NavigationProps {
     sidebar_icons?: NavigationPage[];
 }
 
-const useStyles = createStyles((theme, args, getRef) => ({
+const useStyles = createStyles((theme, { navbarOpened }: { navbarOpened: boolean }, getRef) => ({
     sidebar_title: {
         fontSize: "0.9rem",
         fontWeight: "bold",
@@ -68,13 +70,28 @@ const useStyles = createStyles((theme, args, getRef) => ({
         },
 
         "&:hover": {
-            paddingLeft: "0.7rem",
+            paddingLeft: !navbarOpened ? "0.7rem" : "0.4rem",
             [`& .${getRef("icon")}`]: {
                 transition: "0.2s",
                 backgroundColor: theme.colorScheme === "light" ? theme.colors.blue[4] : theme.colors.grape[9],
             },
             [`@media (min-width: ${theme.breakpoints.sm}px)`]: {
-                borderLeft: "5px solid " + (theme.colorScheme === "light" ? theme.colors.blue[4] : theme.colors.grape[9]),
+                borderLeft: !navbarOpened ? "5px solid " + (theme.colorScheme === "light" ? theme.colors.blue[4] : theme.colors.grape[9]) : "",
+            },
+            color: theme.colorScheme === "light" ? theme.colors.blue[4] : theme.colors.grape[9],
+            svg: {
+                transition: "0.2s",
+                color: theme.colorScheme === "light" ? theme.colors.gray[0] : theme.colors.gray[0],
+            },
+        },
+        "&.selected": {
+            paddingLeft: !navbarOpened ? "0.7rem" : "0.4rem",
+            [`& .${getRef("icon")}`]: {
+                transition: "0.2s",
+                backgroundColor: theme.colorScheme === "light" ? theme.colors.blue[4] : theme.colors.grape[9],
+            },
+            [`@media (min-width: ${theme.breakpoints.sm}px)`]: {
+                borderLeft: !navbarOpened ? "5px solid " + (theme.colorScheme === "light" ? theme.colors.blue[4] : theme.colors.grape[9]) : "",
             },
             color: theme.colorScheme === "light" ? theme.colors.blue[4] : theme.colors.grape[9],
             svg: {
@@ -99,13 +116,13 @@ const useStyles = createStyles((theme, args, getRef) => ({
         borderBottom: "2px solid " + theme.colors["light-gray"][2],
         [`@media (min-width: ${theme.breakpoints.sm}px)`]: {
             // Type safe child reference in nested selectors via ref
-            width: "calc(100vw - " + SIDEBAR_SM_WIDTH + "px)",
-            left: SIDEBAR_SM_WIDTH,
+            width: "calc(100vw - " + (!navbarOpened ? SIDEBAR_SM_WIDTH : SIDEBAR_JUST_ICONS_WIDTH) + "px)",
+            left: !navbarOpened ? SIDEBAR_SM_WIDTH : SIDEBAR_JUST_ICONS_WIDTH,
         },
         [`@media (min-width: ${theme.breakpoints.lg}px)`]: {
             // Type safe child reference in nested selectors via ref
-            width: "calc(100vw - " + SIDEBAR_LG_WIDTH + "px)",
-            left: SIDEBAR_LG_WIDTH,
+            width: "calc(100vw - " + (!navbarOpened ? SIDEBAR_LG_WIDTH : SIDEBAR_JUST_ICONS_WIDTH) + "px)",
+            left: !navbarOpened ? SIDEBAR_LG_WIDTH : SIDEBAR_JUST_ICONS_WIDTH,
         },
     },
     sidebar_styles: {
@@ -119,6 +136,9 @@ const useStyles = createStyles((theme, args, getRef) => ({
             justifyContent: "center",
             maxHeight: 60,
             minHeight: 60,
+            button: {
+                alignSelf: "center",
+            },
             h2: {
                 margin: 0,
                 marginLeft: "auto",
@@ -141,54 +161,68 @@ const useStyles = createStyles((theme, args, getRef) => ({
 
 const PageNavigationProvider = ({ children, topbar_icons_right, topbar_icons_left, sidebar_icons }: NavigationProps) => {
     const [navbarOpened, setNarbarOpened] = useState<boolean>(false);
+    const matches = useMediaQuery("(max-width: 768px)");
+    const location = useLocation();
     const [value, setValue] = useState<any>();
     const { t } = useTranslation();
-    const { classes } = useStyles();
-
+    const { classes } = useStyles({ navbarOpened: matches ? false : navbarOpened });
+    console.log(location);
     return (
         <PageNavigationContext.Provider value={value}>
             <AppShell
                 navbarOffsetBreakpoint="sm"
                 navbar={
-                    <Navbar className={classes.sidebar_styles} hiddenBreakpoint="sm" hidden={!navbarOpened} width={{ sm: SIDEBAR_SM_WIDTH, lg: SIDEBAR_LG_WIDTH }}>
+                    <Navbar
+                        className={classes.sidebar_styles}
+                        hiddenBreakpoint="sm"
+                        hidden={!navbarOpened}
+                        width={{ sm: !navbarOpened ? SIDEBAR_SM_WIDTH : SIDEBAR_JUST_ICONS_WIDTH, lg: !navbarOpened ? SIDEBAR_LG_WIDTH : SIDEBAR_JUST_ICONS_WIDTH }}
+                    >
                         <Box className="title">
-                            <h2>{t("sidebar.navigation")}</h2>
-                            {navbarOpened && (
-                                <MediaQuery largerThan="sm" styles={{ display: "none" }}>
-                                    <Burger opened={navbarOpened} style={{ marginLeft: "1rem", marginRight: "1rem" }} onClick={() => setNarbarOpened((o) => !o)} size="sm" mr="xl" />
-                                </MediaQuery>
-                            )}
+                            {(!navbarOpened || (navbarOpened && matches)) && <h2>{t("sidebar.navigation")}</h2>}
+                            <Burger opened={navbarOpened} style={{ marginLeft: "1rem", marginRight: "1rem" }} onClick={() => setNarbarOpened((o) => !o)} size="sm" mr="xl" />
                         </Box>
                         {sidebar_icons &&
                             sidebar_icons.map((navigationPage, id) => {
                                 if (!navigationPage.icons) {
-                                    return (
+                                    return !navbarOpened || (navbarOpened && matches) ? (
                                         <p className={classes.sidebar_title} key={id}>
                                             {navigationPage.name}
                                         </p>
+                                    ) : (
+                                        <></>
                                     );
                                 }
                                 const icons = [];
                                 icons.push(
                                     <p className={classes.sidebar_title} key={id}>
-                                        {navigationPage.name}
+                                        {(!navbarOpened || (navbarOpened && matches)) && navigationPage.name}
                                     </p>
                                 );
                                 icons.push(
                                     navigationPage.icons.map((navigationIcon, id) => {
                                         return (
-                                            <Link to={navigationIcon.to} key={id} className={classes.sidebar_item} onClick={() => setNarbarOpened(false)}>
+                                            <Link
+                                                to={navigationIcon.to}
+                                                key={id}
+                                                className={navigationIcon.to === location.pathname ? classes.sidebar_item + " selected" : classes.sidebar_item}
+                                                onClick={() => setNarbarOpened(false)}
+                                            >
                                                 <TopbarIcon icon={navigationIcon.icon} />
-                                                <span className="description">{navigationIcon.description}</span>
+                                                {(!navbarOpened || (navbarOpened && matches)) && <span className="description">{navigationIcon.description}</span>}
                                             </Link>
                                         );
                                     })
                                 );
                                 return icons;
                             })}
-                        <div className="navbar-logo">
-                            <img src="/home_quasar_logo.png" alt="" />
-                        </div>
+                        {!navbarOpened ? (
+                            <div className="navbar-logo">
+                                <img src="/home_quasar_logo.png" alt="" />
+                            </div>
+                        ) : (
+                            <></>
+                        )}
                     </Navbar>
                 }
                 header={

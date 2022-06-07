@@ -34,13 +34,13 @@ interface NavigationProps {
 
 const useStyles = createStyles((theme, args, getRef) => ({
     sidebar_title: {
-        fontSize: "1.2rem",
+        fontSize: "0.9rem",
         fontWeight: "bold",
         textAlign: "center",
         paddingTop: "1rem",
-        paddingBottom: "1rem",
+        paddingBottom: "0.5rem",
         margin: 0,
-        color: theme.colorScheme === "light" ? theme.colors.dark[4] : theme.colors.gray[1],
+        color: theme.colors["dark-gray"][0],
     },
     sidebar_item: {
         display: "flex",
@@ -113,8 +113,22 @@ const useStyles = createStyles((theme, args, getRef) => ({
 
         height: "100vh",
         top: 0,
+        ".title": {
+            display: "flex",
+            alignItems: "end",
+            justifyContent: "center",
+            maxHeight: 60,
+            minHeight: 60,
+            h2: {
+                margin: 0,
+                marginLeft: "auto",
+                marginRight: "auto",
+                paddingBottom: "0.5rem",
+                borderBottom: "2px solid " + theme.colors["light-gray"][2],
+            },
+        },
         ".navbar-logo": {
-            marginTop: "0.5rem",
+            marginTop: "auto",
             img: {
                 maxWidth: "100%",
                 maxHeight: 60,
@@ -137,9 +151,14 @@ const PageNavigationProvider = ({ children, topbar_icons_right, topbar_icons_lef
                 navbarOffsetBreakpoint="sm"
                 navbar={
                     <Navbar className={classes.sidebar_styles} hiddenBreakpoint="sm" hidden={!navbarOpened} width={{ sm: SIDEBAR_SM_WIDTH, lg: SIDEBAR_LG_WIDTH }}>
-                        <div className="navbar-logo">
-                            <img src="/home_quasar_logo.png" alt="" />
-                        </div>
+                        <Box className="title">
+                            <h2>{t("sidebar.navigation")}</h2>
+                            {navbarOpened && (
+                                <MediaQuery largerThan="sm" styles={{ display: "none" }}>
+                                    <Burger opened={navbarOpened} style={{ marginLeft: "1rem", marginRight: "1rem" }} onClick={() => setNarbarOpened((o) => !o)} size="sm" mr="xl" />
+                                </MediaQuery>
+                            )}
+                        </Box>
                         {sidebar_icons &&
                             sidebar_icons.map((navigationPage, id) => {
                                 if (!navigationPage.icons) {
@@ -158,7 +177,7 @@ const PageNavigationProvider = ({ children, topbar_icons_right, topbar_icons_lef
                                 icons.push(
                                     navigationPage.icons.map((navigationIcon, id) => {
                                         return (
-                                            <Link to={navigationIcon.to} key={id} className={classes.sidebar_item}>
+                                            <Link to={navigationIcon.to} key={id} className={classes.sidebar_item} onClick={() => setNarbarOpened(false)}>
                                                 <TopbarIcon icon={navigationIcon.icon} />
                                                 <span className="description">{navigationIcon.description}</span>
                                             </Link>
@@ -167,6 +186,9 @@ const PageNavigationProvider = ({ children, topbar_icons_right, topbar_icons_lef
                                 );
                                 return icons;
                             })}
+                        <div className="navbar-logo">
+                            <img src="/home_quasar_logo.png" alt="" />
+                        </div>
                     </Navbar>
                 }
                 header={

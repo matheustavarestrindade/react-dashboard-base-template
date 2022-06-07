@@ -11,7 +11,7 @@ const ThemeProvider = ({ children }: Props) => {
                 colorScheme: "light",
                 colors: {
                     "light-gray": ["#f4f7fd", "#f8f9fa", "#ebeaef"],
-                    "dark-gray": ["#818d95"],
+                    "dark-gray": ["#818d95", "", "", "", "", "", "#212529"],
                 },
             }}
             withNormalizeCSS

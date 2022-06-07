@@ -1,5 +1,9 @@
 {
     "topbar": {
         "title": "Management System"
+    },
+    "sidebar": {
+        "modules": "Modules",
+        "navigation": "Navigation"
     }
 }

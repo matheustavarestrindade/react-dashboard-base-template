@@ -1,17 +1,22 @@
 import { faBatteryFull, faPlus } from "@fortawesome/free-solid-svg-icons";
 import { Route } from "react-router-dom";
 import ModuleInterface from "../ModuleInterface";
+import AddBatteryPage from "./src/add_battery/AddBatteryPage";
 import BatteryManager from "./src/Main";
 
 const MODULE_CONFIGURATION = {
     module_name: "Battery Manager",
     module_route: "/battery_manager",
+    module_subroutes: {
+        add_battery: "/add_battery",
+    },
     module_is_external: false,
 };
 
 const BatteryManagerRouter = (
     <>
-        <Route path={MODULE_CONFIGURATION.module_route + "/"} element={<BatteryManager />}></Route>
+        <Route path={MODULE_CONFIGURATION.module_route} element={<BatteryManager />}></Route>
+        <Route path={MODULE_CONFIGURATION.module_route + MODULE_CONFIGURATION.module_subroutes.add_battery} element={<AddBatteryPage />}></Route>
     </>
 );
 
@@ -31,6 +36,7 @@ const BatteryManagerModule: ModuleInterface = {
         },
     ],
     module_routes: BatteryManagerRouter,
+    module_translation_prefix: "modules.battery_manager.",
 };
 
 export default BatteryManagerModule;

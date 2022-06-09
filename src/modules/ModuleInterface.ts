@@ -9,4 +9,5 @@ export default interface ModuleInterface {
     module_navigation: NavigationItem[];
 
     module_routes: ReactNode;
+    module_translation_prefix: string;
 }

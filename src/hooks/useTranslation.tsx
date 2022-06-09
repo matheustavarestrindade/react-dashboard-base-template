@@ -1,11 +1,18 @@
 import { useLocalStorage } from "@mantine/hooks";
 import translations from "../translations/index";
 
-export default function useTranslation() {
+interface TranslationOptions {
+    prefix?: string;
+}
+
+export default function useTranslation(options?: TranslationOptions) {
     const [language, setLanguage] = useLocalStorage({ key: "user_language", defaultValue: "en" });
     const [fallbackLanguage, setFallbackLanguage] = useLocalStorage({ key: "user_fallbackLanguage", defaultValue: "en" });
 
     const translate = (key: string) => {
+        if (options?.prefix && typeof options?.prefix === "string") {
+            key = options?.prefix + key;
+        }
         const keys = key.split(".");
         return getNestedTranslation(language, keys) ?? getNestedTranslation(fallbackLanguage, keys) ?? key;
     };

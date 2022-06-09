@@ -10,6 +10,9 @@
         "battery_manager": {
             "main": {
                 "header": "Summary"
+            },
+            "add_battery": {
+                "header": "Add Battery"
             }
         }
     }

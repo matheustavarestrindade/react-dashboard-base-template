@@ -5,5 +5,12 @@
     "sidebar": {
         "modules": "Modules",
         "navigation": "Navigation"
+    },
+    "modules": {
+        "battery_manager": {
+            "main": {
+                "header": "Summary"
+            }
+        }
     }
 }

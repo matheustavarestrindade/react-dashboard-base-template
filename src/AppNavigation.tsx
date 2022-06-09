@@ -18,6 +18,7 @@ const AppNavigation = () => {
                     to: "/configuration",
                 },
             ]}
+            topbar_icons_left={[...BatteryManagerModule.module_navigation]}
             sidebar_icons={[
                 {
                     name: t("sidebar.modules"),

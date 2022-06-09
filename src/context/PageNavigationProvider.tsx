@@ -1,5 +1,5 @@
-import { createContext, useContext, useEffect, useState } from "react";
-import { AppShell, Box, Burger, createStyles, Header, MediaQuery, Navbar } from "@mantine/core";
+import { createContext, useContext, useState } from "react";
+import { AppShell, Box, Burger, createStyles, Header, MediaQuery, Navbar, ScrollArea } from "@mantine/core";
 import TopbarIcon from "../components/TopbarIcon";
 import { IconDefinition } from "@fortawesome/free-solid-svg-icons";
 import { Link, useLocation } from "react-router-dom";
@@ -105,12 +105,30 @@ const useStyles = createStyles((theme, { navbarOpened }: { navbarOpened: boolean
         marginLeft: "1rem",
         display: "flex",
         alignItems: "center",
+        ".selected": {
+            div: {
+                backgroundColor: theme.colorScheme === "light" ? theme.colors.blue[4] : theme.colors.grape[9],
+                svg: {
+                    transition: "0.2s",
+                    color: theme.colorScheme === "light" ? theme.colors.gray[0] : theme.colors.gray[0],
+                },
+            },
+        },
     },
     topbar_icons_right: {
         marginRight: "1rem",
         marginLeft: "auto",
         display: "flex",
         alignItems: "center",
+        ".selected": {
+            div: {
+                backgroundColor: theme.colorScheme === "light" ? theme.colors.blue[4] : theme.colors.grape[9],
+                svg: {
+                    transition: "0.2s",
+                    color: theme.colorScheme === "light" ? theme.colors.gray[0] : theme.colors.gray[0],
+                },
+            },
+        },
     },
     header_styles: {
         borderBottom: "2px solid " + theme.colors["light-gray"][2],
@@ -178,44 +196,46 @@ const PageNavigationProvider = ({ children, topbar_icons_right, topbar_icons_lef
                         hidden={!navbarOpened}
                         width={{ sm: !navbarOpened ? SIDEBAR_SM_WIDTH : SIDEBAR_JUST_ICONS_WIDTH, lg: !navbarOpened ? SIDEBAR_LG_WIDTH : SIDEBAR_JUST_ICONS_WIDTH }}
                     >
-                        <Box className="title">
+                        <Navbar.Section className="title">
                             {(!navbarOpened || (navbarOpened && matches)) && <h2>{t("sidebar.navigation")}</h2>}
                             <Burger opened={navbarOpened} style={{ marginLeft: "1rem", marginRight: "1rem" }} onClick={() => setNarbarOpened((o) => !o)} size="sm" mr="xl" />
-                        </Box>
-                        {sidebar_icons &&
-                            sidebar_icons.map((navigationPage, id) => {
-                                if (!navigationPage.icons) {
-                                    return !navbarOpened || (navbarOpened && matches) ? (
-                                        <p className={classes.sidebar_title} key={id}>
-                                            {navigationPage.name}
-                                        </p>
-                                    ) : (
-                                        <></>
-                                    );
-                                }
-                                const icons = [];
-                                icons.push(
-                                    <p className={classes.sidebar_title} key={id}>
-                                        {(!navbarOpened || (navbarOpened && matches)) && navigationPage.name}
-                                    </p>
-                                );
-                                icons.push(
-                                    navigationPage.icons.map((navigationIcon, id) => {
-                                        return (
-                                            <Link
-                                                to={navigationIcon.to}
-                                                key={id}
-                                                className={navigationIcon.to === location.pathname ? classes.sidebar_item + " selected" : classes.sidebar_item}
-                                                onClick={() => setNarbarOpened(false)}
-                                            >
-                                                <TopbarIcon icon={navigationIcon.icon} />
-                                                {(!navbarOpened || (navbarOpened && matches)) && <span className="description">{navigationIcon.description}</span>}
-                                            </Link>
+                        </Navbar.Section>
+                        <Navbar.Section grow component={ScrollArea}>
+                            {sidebar_icons &&
+                                sidebar_icons.map((navigationPage, id) => {
+                                    if (!navigationPage.icons) {
+                                        return !navbarOpened || (navbarOpened && matches) ? (
+                                            <p className={classes.sidebar_title} key={id}>
+                                                {navigationPage.name}
+                                            </p>
+                                        ) : (
+                                            <></>
                                         );
-                                    })
-                                );
-                                return icons;
-                            })}
+                                    }
+                                    const icons = [];
+                                    icons.push(
+                                        <p className={classes.sidebar_title} key={id}>
+                                            {(!navbarOpened || (navbarOpened && matches)) && navigationPage.name}
+                                        </p>
+                                    );
+                                    icons.push(
+                                        navigationPage.icons.map((navigationIcon, id) => {
+                                            return (
+                                                <Link
+                                                    to={navigationIcon.to}
+                                                    key={id}
+                                                    className={location.pathname.includes(navigationIcon.to) ? classes.sidebar_item + " selected" : classes.sidebar_item}
+                                                    onClick={() => setNarbarOpened(matches ? false : navbarOpened)}
+                                                >
+                                                    <TopbarIcon icon={navigationIcon.icon} />
+                                                    {(!navbarOpened || (navbarOpened && matches)) && <span className="description">{navigationIcon.description}</span>}
+                                                </Link>
+                                            );
+                                        })
+                                    );
+                                    return icons;
+                                })}
+                        </Navbar.Section>
                         {!navbarOpened ? (
                             <div className="navbar-logo">
                                 <img src="/home_quasar_logo.png" alt="" />
@@ -234,7 +254,7 @@ const PageNavigationProvider = ({ children, topbar_icons_right, topbar_icons_lef
                             <Box className={classes.topbar_icons_left}>
                                 {topbar_icons_left &&
                                     topbar_icons_left.map((navigationIcon, id) => (
-                                        <Link to={navigationIcon.to} key={id} style={{ marginRight: "1rem" }}>
+                                        <Link to={navigationIcon.to} className={location.pathname.includes(navigationIcon.to) ? "selected" : ""} key={id} style={{ marginRight: "1rem" }}>
                                             <TopbarIcon icon={navigationIcon.icon} />
                                         </Link>
                                     ))}
@@ -242,7 +262,7 @@ const PageNavigationProvider = ({ children, topbar_icons_right, topbar_icons_lef
                             <Box className={classes.topbar_icons_right}>
                                 {topbar_icons_right &&
                                     topbar_icons_right.map((navigationIcon, id) => (
-                                        <Link to={navigationIcon.to} key={id} style={{ marginLeft: "1rem" }}>
+                                        <Link to={navigationIcon.to} className={location.pathname.includes(navigationIcon.to) ? "selected" : ""} key={id} style={{ marginLeft: "1rem" }}>
                                             <TopbarIcon icon={navigationIcon.icon} />
                                         </Link>
                                     ))}

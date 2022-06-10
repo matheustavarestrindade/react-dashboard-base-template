@@ -26,6 +26,7 @@
     "@types/react": "^18.0.8",
     "@types/react-dom": "^18.0.0",
     "dayjs": "^1.11.1",
+    "qr-scanner": "^1.4.1",
     "react": "^18.1.0",
     "react-dom": "^18.1.0",
     "react-router-dom": "^6.3.0",

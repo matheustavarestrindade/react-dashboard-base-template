@@ -12,7 +12,18 @@
                 "header": "Summary"
             },
             "add_battery": {
-                "header": "Add Battery"
+                "header": "Add Battery",
+                "scan_card": {
+                    "title": "Scan your battery QRCode to add to the database",
+                    "qr_tutorial": "Scan the qr-code from the battery in the section marked as yellow on the video",
+                    "no_camera": "Please allow the browser to use your camera to scan the QRCode"
+                },
+                "result_card": {
+                    "title": "Scanned Batteries"
+                },
+                "scanned_batteries": {
+                    "save_to_database": "Save to database"
+                }
             }
         }
     }

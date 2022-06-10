@@ -11,6 +11,7 @@ const MODULE_CONFIGURATION = {
         add_battery: "/add_battery",
     },
     module_is_external: false,
+    module_translation_prefix: "modules.battery_manager.",
 };
 
 const BatteryManagerRouter = (
@@ -32,11 +33,11 @@ const BatteryManagerModule: ModuleInterface = {
     module_navigation: [
         {
             icon: faPlus,
-            to: MODULE_CONFIGURATION.module_route + "/add_battery",
+            to: MODULE_CONFIGURATION.module_route + MODULE_CONFIGURATION.module_subroutes.add_battery,
         },
     ],
     module_routes: BatteryManagerRouter,
-    module_translation_prefix: "modules.battery_manager.",
+    module_translation_prefix: MODULE_CONFIGURATION.module_translation_prefix,
 };
 
 export default BatteryManagerModule;

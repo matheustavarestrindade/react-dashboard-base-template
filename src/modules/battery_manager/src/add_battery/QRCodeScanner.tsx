@@ -128,7 +128,13 @@ const QRCodeScanner = ({ setScannedBatteries, scannedBatteries }: QRCodeScannerI
     }, [qrCodeHandler]);
 
     useEffect(() => {
-        loadQRScanner();
+        const timeout = setTimeout(() => {
+            loadQRScanner();
+        }, 1000);
+        return () => {
+            if (qrScannerRef.current) qrScannerRef.current.stop();
+            clearTimeout(timeout);
+        };
     }, [loadQRScanner]);
 
     return (

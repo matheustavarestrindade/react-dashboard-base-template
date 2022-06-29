@@ -11,7 +11,8 @@ export default function useTranslation(options?: TranslationOptions) {
 
     const translate = (key: string) => {
         if (options?.prefix && typeof options?.prefix === "string") {
-            key = options?.prefix + key;
+            if (options?.prefix.endsWith(".")) key = options?.prefix + key;
+            else key = options?.prefix + key;
         }
         const keys = key.split(".");
         return getNestedTranslation(language, keys) ?? getNestedTranslation(fallbackLanguage, keys) ?? key;

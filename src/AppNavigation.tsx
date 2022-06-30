@@ -1,33 +1,55 @@
 import { faCog, faUser } from "@fortawesome/free-solid-svg-icons";
-import { Routes } from "react-router-dom";
+import { useEffect } from "react";
+import { Route, Routes, useLocation, useNavigate } from "react-router-dom";
 import PageNavigationProvider from "./context/PageNavigationProvider";
+import { useUser } from "./context/UserProvider";
 import useTranslation from "./hooks/useTranslation";
 import BatteryManagerModule from "./modules/battery_manager/BatteryManagerModule";
+import LoginPage from "./pages/authentication/LoginPage";
 
 const AppNavigation = () => {
     const { t } = useTranslation();
+    const { user } = useUser();
+    const navigate = useNavigate();
+    const location = useLocation();
+    useEffect(() => {
+        if (location.pathname.includes("/login") || location.pathname.includes("/register") || location.pathname.includes("/reset-password")) return;
+        if (!user) {
+            navigate("/login");
+        }
+    }, [user, location, navigate]);
+
     return (
-        <PageNavigationProvider
-            topbar_icons_right={[
-                {
-                    icon: faUser,
-                    to: "/user",
-                },
-                {
-                    icon: faCog,
-                    to: "/configuration",
-                },
-            ]}
-            topbar_icons_left={[...BatteryManagerModule.module_navigation]}
-            sidebar_icons={[
-                {
-                    name: t("sidebar.modules"),
-                    icons: [BatteryManagerModule.module_icon],
-                },
-            ]}
-        >
-            <Routes>{BatteryManagerModule.module_routes}</Routes>
-        </PageNavigationProvider>
+        <>
+            {!user && (
+                <Routes>
+                    <Route path="/login" element={<LoginPage />} />
+                </Routes>
+            )}
+            {user && (
+                <PageNavigationProvider
+                    topbar_icons_right={[
+                        {
+                            icon: faUser,
+                            to: "/user",
+                        },
+                        {
+                            icon: faCog,
+                            to: "/configuration",
+                        },
+                    ]}
+                    topbar_icons_left={[...BatteryManagerModule.module_navigation]}
+                    sidebar_icons={[
+                        {
+                            name: t("sidebar.modules"),
+                            icons: [BatteryManagerModule.module_icon],
+                        },
+                    ]}
+                >
+                    <Routes>{BatteryManagerModule.module_routes}</Routes>
+                </PageNavigationProvider>
+            )}
+        </>
     );
 };
 

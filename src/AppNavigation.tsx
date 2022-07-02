@@ -1,7 +1,7 @@
 import { faCog, faUser } from "@fortawesome/free-solid-svg-icons";
 import { useEffect } from "react";
 import { Route, Routes, useLocation, useNavigate } from "react-router-dom";
-import { useConfiguration } from "./context/ConfigurationProvider";
+import { isFunction } from "util";
 import PageNavigationProvider from "./context/PageNavigationProvider";
 import { useUser } from "./context/UserProvider";
 import useTranslation from "./hooks/useTranslation";
@@ -17,7 +17,10 @@ const AppNavigation = () => {
     const location = useLocation();
 
     useEffect(() => {
-        if (location.pathname.includes("/login") || location.pathname.includes("/register") || location.pathname.includes("/reset-password")) return;
+        if (location.pathname.includes("/login") || location.pathname.includes("/register") || location.pathname.includes("/reset-password")) {
+            if (user) navigate("/");
+            return;
+        }
         if (!user) {
             navigate("/login");
         }

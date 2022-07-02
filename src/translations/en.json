@@ -42,7 +42,13 @@
                 "last_name_required": "Last name is required",
                 "register_btn": "Register",
                 "back_to_login_page": "Back to login page",
-                "login_page": "Login page"
+                "login_page": "Login page",
+
+                "submit_error_message_user_already_exists": "An user with this e-mail already exists",
+                "submit_error": "We cannot process your request.",
+                "submit_error_message": "Internal error. Please try again later.",
+                "submit_success": "Success!",
+                "submit_success_message": "Your account has been created successfully. Please check your e-mail to confirm your account."
             }
         }
     },

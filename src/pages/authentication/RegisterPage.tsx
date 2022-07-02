@@ -3,9 +3,10 @@ import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { createStyles, Paper, Title, Text, TextInput, Button, Container, Group, Anchor, Center, Box, Grid, PasswordInput, LoadingOverlay } from "@mantine/core";
 import { useForm } from "@mantine/hooks";
 import { showNotification } from "@mantine/notifications";
-import { useState } from "react";
+import { useCallback, useState } from "react";
 import { Link } from "react-router-dom";
-import { useConfiguration } from "../../context/ConfigurationProvider";
+import useConfiguration from "../../hooks/useConfiguration";
+import { useUser } from "../../context/UserProvider";
 import useTranslation from "../../hooks/useTranslation";
 
 const useStyles = createStyles((theme) => ({
@@ -34,6 +35,7 @@ const RegisterPage = () => {
     const { t } = useTranslation({ prefix: "pages.authentication.register" });
     const [loading, setLoading] = useState<boolean>(false);
     const configuration = useConfiguration();
+    const { loginUser } = useUser();
 
     const form = useForm({
         initialValues: {
@@ -57,49 +59,65 @@ const RegisterPage = () => {
         },
     });
 
-    const handleSubmit = async (values: any) => {
-        const { email, password, firstName, lastName } = values;
-        setLoading(true);
-        try {
-            const response = await fetch(configuration.api.base_url + configuration.api.authentication.base_url + configuration.api.authentication.register, {
-                method: "POST",
-                body: JSON.stringify({
-                    email,
-                    password,
-                    firstName,
-                    lastName,
-                }),
-            });
-            if (response.status !== 200) {
+    const handleSubmit = useCallback(
+        async (values: any) => {
+            const { email, password, firstName, lastName } = values;
+            setLoading(true);
+            try {
+                const response = await fetch(configuration.api.base_url + configuration.api.authentication.base_url + configuration.api.authentication.register, {
+                    method: "POST",
+                    headers: {
+                        "Content-Type": "application/json",
+                    },
+                    body: JSON.stringify({
+                        email,
+                        password,
+                        firstName,
+                        lastName,
+                    }),
+                });
+                if (response.status !== 200) {
+                    showNotification({
+                        icon: <FontAwesomeIcon icon={faExclamation} />,
+                        id: "submit-error",
+                        title: t("submit_error"),
+                        message: t("submit_error_message_user_already_exists"),
+                        color: "red",
+                    });
+                    setLoading(false);
+                    return;
+                }
+                const json: any = await response.json();
+                loginUser({
+                    email: json.email,
+                    role: json.role,
+                    permissions: json.permissions,
+                    jwt_token: json.jwt,
+                    jwt_expiration_date: json.jwt_expiration_date,
+                    first_name: json.first_name,
+                    last_name: json.last_name,
+                });
+                showNotification({
+                    id: "registration-success",
+                    color: "green",
+                    icon: <FontAwesomeIcon icon={faCheck} />,
+                    message: t("submit_success_message"),
+                    title: t("submit_success"),
+                });
+                setLoading(false);
+            } catch (err) {
                 showNotification({
                     icon: <FontAwesomeIcon icon={faExclamation} />,
                     id: "submit-error",
                     title: t("submit_error"),
-                    message: t("submit_error_message_user_already_exists"),
+                    message: t("submit_error_message"),
                     color: "red",
                 });
-                setLoading(false);
-                return;
             }
-            showNotification({
-                id: "registration-success",
-                color: "green",
-                icon: <FontAwesomeIcon icon={faCheck} />,
-                message: t("registration_success_message"),
-                title: t("registration_success"),
-            });
             setLoading(false);
-        } catch (err) {
-            showNotification({
-                icon: <FontAwesomeIcon icon={faExclamation} />,
-                id: "submit-error",
-                title: t("submit_error"),
-                message: t("submit_error_message"),
-                color: "red",
-            });
-        }
-        setLoading(false);
-    };
+        },
+        [configuration, t]
+    );
 
     return (
         <div style={{ backgroundColor: "#fefefe", width: "100vw", height: "100vh", display: "flex", alignItems: "center" }}>

@@ -1,4 +1,4 @@
-import { createContext, useContext, useState } from "react";
+import { createContext, useContext } from "react";
 import { AppShell, Box, Burger, createStyles, Header, MediaQuery, Navbar, ScrollArea } from "@mantine/core";
 import TopbarIcon from "../components/TopbarIcon";
 import { IconDefinition } from "@fortawesome/free-solid-svg-icons";
@@ -181,12 +181,11 @@ const PageNavigationProvider = ({ children, topbar_icons_right, topbar_icons_lef
     const [navbarOpened, setNarbarOpened] = useLocalStorageValue<boolean>({ key: "home-auto-navbar", defaultValue: true });
     const matches = useMediaQuery("(max-width: 768px)");
     const location = useLocation();
-    const [value, setValue] = useState<any>();
     const { t } = useTranslation();
     const { classes } = useStyles({ navbarOpened: matches ? false : navbarOpened });
 
     return (
-        <PageNavigationContext.Provider value={value}>
+        <PageNavigationContext.Provider value={{}}>
             <AppShell
                 navbarOffsetBreakpoint="sm"
                 navbar={

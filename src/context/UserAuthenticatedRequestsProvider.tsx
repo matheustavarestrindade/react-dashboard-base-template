@@ -121,6 +121,13 @@ const UserAuthenticatedRequestsProvider = ({ children }: Props) => {
                 request.invalidate();
                 return request;
             }
+            if (user.jwt_expiration_date.getTime() < Date.now()) {
+                const success = await user.refreshToken();
+                if (!success) {
+                    request.invalidate();
+                    return request;
+                }
+            }
             request.setJWT(user.jwt_token);
             await request.execute();
             return request;

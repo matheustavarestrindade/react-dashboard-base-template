@@ -5,7 +5,8 @@ const AuthenticatedRequestContext = createContext<{
     executeAuthenticatedRequest: (request: UserAuthenticatedRequest<any, any>) => Promise<UserAuthenticatedRequest<any, any>>;
 }>({
     executeAuthenticatedRequest: async (request: UserAuthenticatedRequest<any, any>) => {
-        throw new Error("User is not authenticated");
+        request.invalidate();
+        return request;
     },
 });
 
@@ -60,15 +61,15 @@ export class UserAuthenticatedRequest<ExpectedResult, ExpectedParams> implements
                     Authorization: "Bearer " + this.JWTToken,
                 },
             });
+            const json = await response.json();
             if (response.status === 200) {
+                this.resultObject = json;
                 this.result = true;
-                this.resultObject = await response.json();
             } else {
-                const json = await response.json();
                 this.error = true;
                 this.errorMessage = {
                     message: json.message,
-                    code: json.code,
+                    code: json.status,
                 };
             }
         } catch (e) {

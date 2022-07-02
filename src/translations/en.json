@@ -10,7 +10,39 @@
                 "keep_me_logged_in": "Keep me logged in",
                 "login_btn": "Login",
                 "sign_up": "Sign up",
-                "dont_have_account": "Don't have an account? "
+                "dont_have_account": "Don't have an account? ",
+                "forgot_password": "Forgot your password?"
+            },
+            "forgot_password": {
+                "title": "Forgot your password?",
+                "subtitle": "Enter your e-mail and we will send you a link to reset your password",
+                "mail": "E-mail",
+                "mail_placeholder": "Enter your e-mail",
+                "back_to_login_page": "Back to login page",
+                "reset_password": "Reset password"
+            },
+            "register": {
+                "title": "Register",
+                "subtitle": "Create your account",
+                "name": "Name",
+                "name_placeholder": "Enter your name",
+                "email": "E-mail",
+                "email_placeholder": "Enter your e-mail",
+                "invalid_email": "Invalid e-mail",
+                "password": "Password",
+                "password_placeholder": "Enter your password",
+                "confirm_password": "Confirm password",
+                "confirm_password_placeholder": "Confirm your password",
+                "password_mismatch": "Password mismatch",
+                "first_name": "First name",
+                "first_name_placeholder": "Enter your first name",
+                "first_name_required": "First name is required",
+                "last_name": "Last name",
+                "last_name_placeholder": "Enter your last name",
+                "last_name_required": "Last name is required",
+                "register_btn": "Register",
+                "back_to_login_page": "Back to login page",
+                "login_page": "Login page"
             }
         }
     },

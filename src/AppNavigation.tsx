@@ -1,17 +1,21 @@
 import { faCog, faUser } from "@fortawesome/free-solid-svg-icons";
 import { useEffect } from "react";
 import { Route, Routes, useLocation, useNavigate } from "react-router-dom";
+import { useConfiguration } from "./context/ConfigurationProvider";
 import PageNavigationProvider from "./context/PageNavigationProvider";
 import { useUser } from "./context/UserProvider";
 import useTranslation from "./hooks/useTranslation";
 import BatteryManagerModule from "./modules/battery_manager/BatteryManagerModule";
+import ForgotPassword from "./pages/authentication/ForgotPassword";
 import LoginPage from "./pages/authentication/LoginPage";
+import RegisterPage from "./pages/authentication/RegisterPage";
 
 const AppNavigation = () => {
     const { t } = useTranslation();
     const { user } = useUser();
     const navigate = useNavigate();
     const location = useLocation();
+
     useEffect(() => {
         if (location.pathname.includes("/login") || location.pathname.includes("/register") || location.pathname.includes("/reset-password")) return;
         if (!user) {
@@ -24,6 +28,8 @@ const AppNavigation = () => {
             {!user && (
                 <Routes>
                     <Route path="/login" element={<LoginPage />} />
+                    <Route path="/reset-password" element={<ForgotPassword />} />
+                    <Route path="/register" element={<RegisterPage />} />
                 </Routes>
             )}
             {user && (

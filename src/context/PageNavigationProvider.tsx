@@ -184,7 +184,7 @@ const PageNavigationProvider = ({ children, topbar_icons_right, topbar_icons_lef
     const [value, setValue] = useState<any>();
     const { t } = useTranslation();
     const { classes } = useStyles({ navbarOpened: matches ? false : navbarOpened });
-    console.log(location);
+
     return (
         <PageNavigationContext.Provider value={value}>
             <AppShell

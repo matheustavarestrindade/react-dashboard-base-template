@@ -11,7 +11,13 @@
                 "login_btn": "Login",
                 "sign_up": "Sign up",
                 "dont_have_account": "Don't have an account? ",
-                "forgot_password": "Forgot your password?"
+                "forgot_password": "Forgot your password?",
+
+                "submit_error_message_invalid_credentials": "Your username or e-mail are incorrect.",
+                "submit_error": "We cannot process your request.",
+                "submit_error_message": "Internal error. Please try again later.",
+                "submit_success": "Success!",
+                "submit_success_message": "Your has been logged-in!"
             },
             "forgot_password": {
                 "title": "Forgot your password?",

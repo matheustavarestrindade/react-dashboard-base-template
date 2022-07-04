@@ -52,7 +52,7 @@ const RegisterPage = () => {
             lastName: t("last_name_required"),
         },
         validationRules: {
-            email: (value) => /^\w+([\.-]?\w+)*@\w+([\.-]?\w+)*(\.\w{2,3})+$/.test(value),
+            email: (value) => /^\w+([\\.-]?\w+)*@\w+([\\.-]?\w+)*(\.\w{2,3})+$/.test(value),
             confirmPassword: (value, values) => (values && value !== values.password ? false : true),
             firstName: (value) => value.length > 2,
             lastName: (value) => value.length > 2,
@@ -116,7 +116,7 @@ const RegisterPage = () => {
             }
             setLoading(false);
         },
-        [configuration, t]
+        [configuration.api.authentication.base_url, configuration.api.authentication.register, configuration.api.base_url, loginUser, t]
     );
 
     return (

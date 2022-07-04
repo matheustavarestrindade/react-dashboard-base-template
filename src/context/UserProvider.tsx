@@ -101,7 +101,7 @@ class User implements IUser {
 
     async refreshUser(jwt: string) {
         this.jwt_token = jwt;
-        return this.refreshToken();
+        return await this.refreshToken();
     }
 }
 
@@ -115,6 +115,7 @@ const UserProvider = ({ children }: Props) => {
 
     const loginUser = useCallback(
         (user: ILoginUser) => {
+            console.log("Setting jwt to user", user);
             setLocalJWT(user.jwt_token);
             setUser(new User(user, configuration.api.base_url + configuration.api.authentication.base_url + configuration.api.authentication.update_token));
         },
@@ -125,7 +126,7 @@ const UserProvider = ({ children }: Props) => {
         // load user from local storage
         const user = new User(null, configuration.api.base_url + configuration.api.authentication.base_url + configuration.api.authentication.update_token);
         const updated = await user.refreshUser(localJWT);
-        if (updated) {
+        if (!updated) {
             setUser(undefined);
             return;
         }

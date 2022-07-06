@@ -5,7 +5,7 @@ import { useForm } from "@mantine/hooks";
 import { showNotification } from "@mantine/notifications";
 import { useCallback, useState } from "react";
 import { Link } from "react-router-dom";
-import useConfiguration from "../../hooks/useConfiguration";
+import configuration from "../../ProjectConfiguration";
 import { useUser } from "../../context/UserProvider";
 import useTranslation from "../../hooks/useTranslation";
 
@@ -34,7 +34,6 @@ const RegisterPage = () => {
     const { classes } = useStyles();
     const { t } = useTranslation({ prefix: "pages.authentication.register" });
     const [loading, setLoading] = useState<boolean>(false);
-    const configuration = useConfiguration();
     const { loginUser } = useUser();
 
     const form = useForm({
@@ -116,7 +115,7 @@ const RegisterPage = () => {
             }
             setLoading(false);
         },
-        [configuration.api.authentication.base_url, configuration.api.authentication.register, configuration.api.base_url, loginUser, t]
+        [loginUser, t]
     );
 
     return (

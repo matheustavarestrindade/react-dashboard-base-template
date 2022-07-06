@@ -1,7 +1,9 @@
 export default interface BatteryInterface {
-    bat_id?: number;
-    initial_voltage?: number;
-    discharge_rate?: number;
-    capacity?: number;
-    from?: string;
+    batteryId: number;
+    initialVoltage: number;
+    dischargeRate: number;
+    capacitymAh: number;
+    from: string;
+    batteryType: string;
+    inUse: boolean;
 }

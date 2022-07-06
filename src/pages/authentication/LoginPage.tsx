@@ -3,7 +3,7 @@ import { Paper, createStyles, TextInput, PasswordInput, Checkbox, Button, Title,
 import { Link } from "react-router-dom";
 import { useForm } from "@mantine/hooks";
 import { useCallback, useState } from "react";
-import useConfiguration from "../../hooks/useConfiguration";
+import configuration from "../../ProjectConfiguration";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faCheck, faExclamation } from "@fortawesome/free-solid-svg-icons";
 import { showNotification } from "@mantine/notifications";
@@ -47,7 +47,6 @@ const LoginPage = () => {
     const { classes } = useStyles();
     const { t } = useTranslation({ prefix: "pages.authentication.login" });
     const [loading, setLoading] = useState<boolean>(false);
-    const configuration = useConfiguration();
     const { loginUser } = useUser();
     const form = useForm({
         initialValues: {
@@ -117,7 +116,7 @@ const LoginPage = () => {
             }
             setLoading(false);
         },
-        [configuration.api.authentication.base_url, configuration.api.authentication.login, configuration.api.base_url, loginUser, t]
+        [loginUser, t]
     );
 
     return (

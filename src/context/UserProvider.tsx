@@ -1,7 +1,7 @@
+import { LoadingOverlay } from "@mantine/core";
 import { useLocalStorage } from "@mantine/hooks";
 import { createContext, useCallback, useContext, useEffect, useState } from "react";
-import useConfiguration from "../hooks/useConfiguration";
-
+import configuration from "../ProjectConfiguration";
 const UserContext = createContext<IUserProvider>({
     user: undefined,
     loginUser: (u) => null,
@@ -82,15 +82,14 @@ class User implements IUser {
                     Authorization: "Bearer " + this.jwt_token,
                 },
             });
-
             if (response.status === 200) {
-                const json: any = response.json();
+                const json: any = await response.json();
                 this.jwt_token = json.jwt_token;
                 this.email = json.email;
                 this.role = json.role;
                 this.permissions = json.permissions;
                 this.jwt_token = json.jwt;
-                this.jwt_expiration_date = json.jwt_expiration_date;
+                this.jwt_expiration_date = new Date(json.jwt_expiration_date);
                 this.first_name = json.first_name;
                 this.last_name = json.last_name;
                 return true;
@@ -109,9 +108,8 @@ const UserProvider = ({ children }: Props) => {
     const [localJWT, setLocalJWT] = useLocalStorage({
         key: "jwt_token",
     });
-
+    const [loading, setLoading] = useState(true);
     const [user, setUser] = useState<IUser>();
-    const configuration = useConfiguration();
 
     const loginUser = useCallback(
         (user: ILoginUser) => {
@@ -124,14 +122,17 @@ const UserProvider = ({ children }: Props) => {
 
     const refreshUserViaJWT = useCallback(async () => {
         // load user from local storage
+        setLoading(true);
         const user = new User(null, configuration.api.base_url + configuration.api.authentication.base_url + configuration.api.authentication.update_token);
         const updated = await user.refreshUser(localJWT);
         if (!updated) {
             setUser(undefined);
+            setLoading(false);
             return;
         }
+        setLoading(false);
         setUser(user);
-    }, [configuration.api.authentication.base_url, configuration.api.authentication.update_token, configuration.api.base_url, localJWT]);
+    }, [localJWT]);
 
     useEffect(() => {
         if (user) return;
@@ -147,6 +148,7 @@ const UserProvider = ({ children }: Props) => {
                 loginUser,
             }}
         >
+            <LoadingOverlay visible={loading} />
             {children}
         </UserContext.Provider>
     );

@@ -30,12 +30,12 @@ interface UserAuthenticatedRequestError {
     code: number;
 }
 
-export class UserAuthenticatedRequest<ExpectedResult, ExpectedParams> implements IUserAuthenticatedRequest<ExpectedResult> {
+export class UserAuthenticatedRequest<ExpectedParams extends { [key: string]: any }, ExpectedResult> implements IUserAuthenticatedRequest<ExpectedResult> {
     private route: string;
     private method: "GET" | "POST" | "PUT" | "DELETE";
     private JWTToken: string | undefined;
 
-    private requestBody: ExpectedParams | {};
+    private requestBody: ExpectedParams | undefined;
 
     private result: boolean;
     private resultObject: ExpectedResult | undefined;
@@ -48,19 +48,27 @@ export class UserAuthenticatedRequest<ExpectedResult, ExpectedParams> implements
         this.error = false;
         this.result = false;
         this.resultObject = undefined;
-        this.requestBody = {};
+        this.requestBody = undefined;
     }
 
     async execute(): Promise<void> {
         try {
-            const response = await fetch(this.route, {
-                method: this.method,
-                body: JSON.stringify(this.requestBody),
-                headers: {
-                    "Content-Type": "application/json",
-                    Authorization: "Bearer " + this.JWTToken,
-                },
-            });
+            const response = await fetch(
+                this.route +
+                    (this.method === "GET" && this.requestBody !== undefined
+                        ? Object.keys(this.requestBody)
+                              .map((key: string, id: number) => (id > 0 ? "&" : "?") + key + "=" + this.requestBody?.[key])
+                              .join("")
+                        : ""),
+                {
+                    method: this.method,
+                    body: this.method === "GET" || this.requestBody === undefined ? undefined : JSON.stringify(this.requestBody),
+                    headers: {
+                        "Content-Type": "application/json",
+                        Authorization: "Bearer " + this.JWTToken,
+                    },
+                }
+            );
             const json = await response.json();
             if (response.status === 200) {
                 this.resultObject = json;
@@ -73,6 +81,7 @@ export class UserAuthenticatedRequest<ExpectedResult, ExpectedParams> implements
                 };
             }
         } catch (e) {
+            console.log(e);
             this.error = true;
             this.errorMessage = {
                 message: "An error has occurred",

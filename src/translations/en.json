@@ -80,8 +80,33 @@
                 "result_card": {
                     "title": "Scanned Batteries"
                 },
-                "scanned_batteries": {
-                    "save_to_database": "Save to database"
+                "scanned_results": {
+                    "select_type_placeholder": "Select the type of battery",
+                    "select_type_nothing_found": "No battery type found",
+                    "switch_on": "Yes",
+                    "switch_off": "No",
+                    "battery_initial_voltage": "Initial voltage",
+                    "battery_discharge_rate": "Discharge rate",
+                    "battery_capacity": "Capacity",
+                    "battery_from": "From"
+                },
+                "save_to_database": {
+                    "add_battery_error_title": "Error",
+                    "add_battery_error": "An error occurred while adding the battery to the database",
+                    "add_battery_some_with_error_title": "Partial Error",
+                    "add_battery_some_with_error": "Some batteries were not added to the database. Please check the batteries that were not added",
+                    "add_battery_success_title": "Success",
+                    "add_battery_success": "The batteries has been added to the database",
+                    "save_to_database_button": "Save to database",
+                    "table": {
+                        "id": "ID",
+                        "type": "Battery Type",
+                        "initial_voltage": "Initial Voltage",
+                        "discharge_rate": "Discharge Rate",
+                        "capacity_mah": "Capacity mAh",
+                        "from": "From",
+                        "in_use": "In Use"
+                    }
                 }
             }
         }

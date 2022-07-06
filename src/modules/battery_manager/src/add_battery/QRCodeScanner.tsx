@@ -4,26 +4,28 @@ import { Grid, Group, Text, ThemeIcon } from "@mantine/core";
 import { showNotification, updateNotification } from "@mantine/notifications";
 import QrScanner from "qr-scanner";
 import { useCallback, useEffect, useRef, useState } from "react";
+import { useUserAuthenticatedRequest } from "../../../../context/UserAuthenticatedRequestsProvider";
 import useTranslation from "../../../../hooks/useTranslation";
 import BatteryManagerModule from "../../BatteryManagerModule";
+import { BatteryExistsOnDatabaseQuery } from "../../queries/BatteryExistsOnDatabaseQuery";
 import BatteryInterface from "../BatteryInterface";
 
 interface QRCodeScannerInterface {
-    setScannedBatteries: React.Dispatch<React.SetStateAction<BatteryInterface[]>>;
-    scannedBatteries: BatteryInterface[];
+    addScannedBattery: (battery: BatteryInterface) => void;
 }
 
-const QRCodeScanner = ({ setScannedBatteries, scannedBatteries }: QRCodeScannerInterface) => {
+const QRCodeScanner = ({ addScannedBattery }: QRCodeScannerInterface) => {
     const { t } = useTranslation({ prefix: BatteryManagerModule.module_translation_prefix });
     const videoDisplayRef = useRef<HTMLVideoElement | null>(null);
     const [hasWebcam, setHasWebcam] = useState<boolean>(false);
     const qrScannerRef = useRef<QrScanner | null>(null);
     const [scannedBatteriesIds, setScannedBatteriesIds] = useState<number[]>([]);
+    const { executeAuthenticatedRequest } = useUserAuthenticatedRequest();
 
     const handleScannedBattery = useCallback(
         async (battery: BatteryInterface) => {
-            if (battery.bat_id == null || battery.bat_id === undefined) return;
-            const battery_id: number = battery.bat_id;
+            if (battery.batteryId == null || battery.batteryId === undefined) return;
+            const battery_id: number = battery.batteryId;
             if (scannedBatteriesIds.includes(battery_id)) return;
             const notification_id = "adding-battery" + Date.now();
 
@@ -39,7 +41,22 @@ const QRCodeScanner = ({ setScannedBatteries, scannedBatteries }: QRCodeScannerI
                 return s;
             });
 
-            const isInDatabase = await new Promise<boolean>((res, rej) => setTimeout(() => res(false), 4000)); // Need to make a request to check if it is in the database
+            const request = new BatteryExistsOnDatabaseQuery();
+            request.setRequestBody({ batteryId: battery.batteryId });
+            const result = await executeAuthenticatedRequest(request);
+
+            if (result.hasError()) {
+                updateNotification({
+                    id: notification_id,
+                    color: "red",
+                    autoClose: 5000,
+                    icon: <FontAwesomeIcon icon={faExclamation} />,
+                    message: "Unable to comunicate with the backend!",
+                });
+                return;
+            }
+
+            const isInDatabase = result.getResult().in_database;
 
             if (isInDatabase) {
                 updateNotification({
@@ -60,11 +77,9 @@ const QRCodeScanner = ({ setScannedBatteries, scannedBatteries }: QRCodeScannerI
                 message: "Battery has been added to upload list!",
             });
 
-            const updatedList = [...scannedBatteries, battery];
-
-            setScannedBatteries(updatedList);
+            addScannedBattery(battery);
         },
-        [scannedBatteriesIds, scannedBatteries, setScannedBatteries]
+        [addScannedBattery, executeAuthenticatedRequest, scannedBatteriesIds]
     );
 
     const qrCodeHandler = useCallback(
@@ -72,14 +87,22 @@ const QRCodeScanner = ({ setScannedBatteries, scannedBatteries }: QRCodeScannerI
             const qrData = scannedQR.data;
             const splittedQRValues = qrData.includes(";") ? qrData.split(";") : isNumber(qrData) ? [qrData] : null;
             if (splittedQRValues == null) return;
-            const batteryInformation: BatteryInterface = {};
+            const batteryInformation: BatteryInterface = {
+                inUse: false,
+                batteryId: -1,
+                batteryType: "LITHIUM_ION_18650",
+                initialVoltage: 0.0,
+                dischargeRate: 0.5,
+                capacitymAh: 0,
+                from: "",
+            };
             if (splittedQRValues.length === 1) {
                 //Old code, has just the bat id
-                batteryInformation.bat_id = Number(splittedQRValues[0]);
+                batteryInformation.batteryId = Number(splittedQRValues[0]);
                 handleScannedBattery(batteryInformation);
                 return;
             }
-
+            console.log(splittedQRValues);
             for (const batInfoString of splittedQRValues) {
                 const splittedInfo = batInfoString.split("=");
                 if (splittedInfo.length !== 2) {
@@ -87,19 +110,22 @@ const QRCodeScanner = ({ setScannedBatteries, scannedBatteries }: QRCodeScannerI
                 }
                 switch (splittedInfo[0]) {
                     case "bat_id":
-                        batteryInformation.bat_id = Number(splittedInfo[1]);
+                        batteryInformation.batteryId = Number(splittedInfo[1]);
                         break;
                     case "capacity":
-                        batteryInformation.capacity = Number(splittedInfo[1]);
+                        batteryInformation.capacitymAh = Number(splittedInfo[1]);
                         break;
                     case "discharge_rate":
-                        batteryInformation.discharge_rate = Number(splittedInfo[1]);
+                        batteryInformation.dischargeRate = Number(splittedInfo[1]);
                         break;
                     case "from":
                         batteryInformation.from = splittedInfo[1];
                         break;
                     case "initial_voltage":
-                        batteryInformation.initial_voltage = Number(splittedInfo[1]);
+                        batteryInformation.initialVoltage = Number(splittedInfo[1]);
+                        break;
+                    case "battery_type":
+                        batteryInformation.batteryType = splittedInfo[1];
                         break;
                 }
             }

@@ -1,7 +1,6 @@
 import { faCog, faUser } from "@fortawesome/free-solid-svg-icons";
 import { useEffect } from "react";
 import { Route, Routes, useLocation, useNavigate } from "react-router-dom";
-import { isFunction } from "util";
 import PageNavigationProvider from "./context/PageNavigationProvider";
 import { useUser } from "./context/UserProvider";
 import useTranslation from "./hooks/useTranslation";

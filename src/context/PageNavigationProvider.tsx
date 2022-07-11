@@ -260,11 +260,22 @@ const PageNavigationProvider = ({ children, topbar_icons_right, topbar_icons_lef
                             </Box>
                             <Box className={classes.topbar_icons_right}>
                                 {topbar_icons_right &&
-                                    topbar_icons_right.map((navigationIcon, id) => (
-                                        <Link to={navigationIcon.to} className={location.pathname.includes(navigationIcon.to) ? "selected" : ""} key={id} style={{ marginLeft: "1rem" }}>
-                                            <TopbarIcon icon={navigationIcon.icon} />
-                                        </Link>
-                                    ))}
+                                    topbar_icons_right.map((navigationIcon, id) =>
+                                        navigationIcon.description ? (
+                                            <>
+                                                <MediaQuery smallerThan="sm" styles={{ display: "none" }}>
+                                                    <div className={"icon-description"}>{navigationIcon.description}</div>
+                                                </MediaQuery>
+                                                <Link to={navigationIcon.to} className={location.pathname.includes(navigationIcon.to) ? "selected" : ""} key={id} style={{ marginLeft: "1rem" }}>
+                                                    <TopbarIcon icon={navigationIcon.icon} />
+                                                </Link>
+                                            </>
+                                        ) : (
+                                            <Link to={navigationIcon.to} className={location.pathname.includes(navigationIcon.to) ? "selected" : ""} key={id} style={{ marginLeft: "1rem" }}>
+                                                <TopbarIcon icon={navigationIcon.icon} />
+                                            </Link>
+                                        )
+                                    )}
                             </Box>
                         </div>
                     </Header>

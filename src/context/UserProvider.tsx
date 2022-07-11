@@ -113,11 +113,10 @@ const UserProvider = ({ children }: Props) => {
 
     const loginUser = useCallback(
         (user: ILoginUser) => {
-            console.log("Setting jwt to user", user);
             setLocalJWT(user.jwt_token);
             setUser(new User(user, configuration.api.base_url + configuration.api.authentication.base_url + configuration.api.authentication.update_token));
         },
-        [configuration, setLocalJWT]
+        [setLocalJWT]
     );
 
     const refreshUserViaJWT = useCallback(async () => {

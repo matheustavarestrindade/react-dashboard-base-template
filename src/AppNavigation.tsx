@@ -1,4 +1,4 @@
-import { faCog, faUser } from "@fortawesome/free-solid-svg-icons";
+import { faCog, faUser, faUserCog } from "@fortawesome/free-solid-svg-icons";
 import { useEffect } from "react";
 import { Route, Routes, useLocation, useNavigate } from "react-router-dom";
 import PageNavigationProvider from "./context/PageNavigationProvider";
@@ -8,6 +8,7 @@ import BatteryManagerModule from "./modules/battery_manager/BatteryManagerModule
 import ForgotPassword from "./pages/authentication/ForgotPassword";
 import LoginPage from "./pages/authentication/LoginPage";
 import RegisterPage from "./pages/authentication/RegisterPage";
+import ConfigurationsPage from "./pages/configuration/ConfigurationsPage";
 
 const AppNavigation = () => {
     const { t } = useTranslation();
@@ -38,12 +39,9 @@ const AppNavigation = () => {
                 <PageNavigationProvider
                     topbar_icons_right={[
                         {
-                            icon: faUser,
-                            to: "/user",
-                        },
-                        {
-                            icon: faCog,
+                            icon: faUserCog,
                             to: "/configuration",
+                            description: user.first_name + " " + user.last_name,
                         },
                     ]}
                     topbar_icons_left={[...BatteryManagerModule.module_navigation]}
@@ -54,7 +52,10 @@ const AppNavigation = () => {
                         },
                     ]}
                 >
-                    <Routes>{BatteryManagerModule.module_routes}</Routes>
+                    <Routes>
+                        {BatteryManagerModule.module_routes}
+                        <Route path="/configuration" element={<ConfigurationsPage />} />
+                    </Routes>
                 </PageNavigationProvider>
             )}
         </>

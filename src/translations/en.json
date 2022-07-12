@@ -68,7 +68,15 @@
     "modules": {
         "battery_manager": {
             "main": {
-                "header": "Summary"
+                "header": "Summary",
+                "battery_fetch_resume_error_title": "Error fetching batteries resume",
+                "battery_fetch_resume_error": "Internal error. Please try again later.",
+                "batteries_in_database_title": "Batteries in database",
+                "batteries_free_count_title": "Batteries free",
+                "batteries_used_count_title": "Batteries used",
+                "batteries_total_mah_title": "Total batteries capacity (mAh)",
+                "batteries_free_mah_title": "Batteries free capacity (mAh)",
+                "batteries_used_mah_title": "Batteries used capacity (mAh)"
             },
             "add_battery": {
                 "header": "Add Battery",

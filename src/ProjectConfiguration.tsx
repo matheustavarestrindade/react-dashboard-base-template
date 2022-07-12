@@ -12,6 +12,7 @@ interface IProjectConfigurations {
             battery_types: string;
             add_to_database: string;
             exists_route: string;
+            battery_resume: string;
         };
     };
 }
@@ -30,6 +31,7 @@ export default Object.freeze({
             battery_types: "/types",
             add_to_database: "/add",
             exists_route: "/exists",
+            battery_resume: "/resume",
         },
     },
 }) as IProjectConfigurations;

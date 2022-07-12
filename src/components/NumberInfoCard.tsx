@@ -3,7 +3,7 @@ import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { Card, LoadingOverlay, Text, Group, ThemeIcon, Title, Center, Space } from "@mantine/core";
 import { useEffect, useState } from "react";
 
-const InfoCard = ({ icon, header, content }: { icon: IconDefinition; header: string; content: string | undefined | null }) => {
+const InfoCard = ({ icon, header, content }: { icon: IconDefinition; header: string; content: string | number | undefined | null }) => {
     const [loading, setLoading] = useState<boolean>(true);
 
     useEffect(() => {
@@ -24,7 +24,7 @@ const InfoCard = ({ icon, header, content }: { icon: IconDefinition; header: str
             </Group>
             <Center style={{ position: "relative" }}>
                 <LoadingOverlay visible={loading} color="dark" transitionDuration={1000} />
-                {(content && <Title>{content}</Title>) || <Space h={45} />}
+                {(content !== null && content !== undefined && <Title>{content}</Title>) || <Space h={45} />}
             </Center>
         </Card>
     );

@@ -253,7 +253,14 @@ const PageNavigationProvider = ({ children, topbar_icons_right, topbar_icons_lef
                             <Box className={classes.topbar_icons_left}>
                                 {topbar_icons_left &&
                                     topbar_icons_left.map((navigationIcon, id) => (
-                                        <Link to={navigationIcon.to} className={location.pathname.includes(navigationIcon.to) ? "selected" : ""} key={id} style={{ marginRight: "1rem" }}>
+                                        <Link
+                                            to={navigationIcon.to}
+                                            className={
+                                                location.pathname.substring(location.pathname.lastIndexOf("/")) === navigationIcon.to.substring(location.pathname.lastIndexOf("/")) ? "selected" : ""
+                                            }
+                                            key={id}
+                                            style={{ marginRight: "1rem" }}
+                                        >
                                             <TopbarIcon icon={navigationIcon.icon} />
                                         </Link>
                                     ))}

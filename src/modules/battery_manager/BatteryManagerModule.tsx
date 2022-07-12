@@ -1,4 +1,4 @@
-import { faBatteryFull, faPlus } from "@fortawesome/free-solid-svg-icons";
+import { faBatteryFull, faHome, faPlus } from "@fortawesome/free-solid-svg-icons";
 import { Route } from "react-router-dom";
 import ModuleInterface from "../ModuleInterface";
 import AddBatteryPage from "./src/add_battery/AddBatteryPage";
@@ -31,6 +31,10 @@ const BatteryManagerModule: ModuleInterface = {
         description: "Battery Manager",
     },
     module_navigation: [
+        {
+            icon: faHome,
+            to: MODULE_CONFIGURATION.module_route,
+        },
         {
             icon: faPlus,
             to: MODULE_CONFIGURATION.module_route + MODULE_CONFIGURATION.module_subroutes.add_battery,

@@ -1,10 +1,11 @@
-import { faCog, faUser, faUserCog } from "@fortawesome/free-solid-svg-icons";
-import { useEffect } from "react";
+import { faUserCog } from "@fortawesome/free-solid-svg-icons";
+import { useEffect, useState } from "react";
 import { Route, Routes, useLocation, useNavigate } from "react-router-dom";
-import PageNavigationProvider from "./context/PageNavigationProvider";
+import PageNavigationProvider, { NavigationItem } from "./context/PageNavigationProvider";
 import { useUser } from "./context/UserProvider";
 import useTranslation from "./hooks/useTranslation";
 import BatteryManagerModule from "./modules/battery_manager/BatteryManagerModule";
+import ModuleInterface from "./modules/ModuleInterface";
 import ForgotPassword from "./pages/authentication/ForgotPassword";
 import LoginPage from "./pages/authentication/LoginPage";
 import RegisterPage from "./pages/authentication/RegisterPage";
@@ -16,6 +17,12 @@ const AppNavigation = () => {
     const navigate = useNavigate();
     const location = useLocation();
 
+    const [modules] = useState<ModuleInterface[]>([BatteryManagerModule]);
+    const [topbarNavigationLeft, setTopbarNavigationLeft] = useState<NavigationItem[]>([]);
+
+    const [userAllowedRoutes, setUserAllowedRoutes] = useState<React.ReactElement[]>([]);
+    const [userSidebarNavigation, setUserSidebarNavigation] = useState<NavigationItem[]>([]);
+
     useEffect(() => {
         if (location.pathname.includes("/login") || location.pathname.includes("/register") || location.pathname.includes("/reset-password")) {
             if (user) navigate("/");
@@ -25,6 +32,30 @@ const AppNavigation = () => {
             navigate("/login");
         }
     }, [user, location, navigate]);
+
+    useEffect(() => {
+        const userAllowedRoutes = [];
+        const sidebarNavigation = [];
+        for (const module of modules) {
+            if (user?.permissions.includes(module.module_permission) || module.module_permission === "") {
+                userAllowedRoutes.push(...module.module_routes);
+                sidebarNavigation.push(module.module_icon);
+            }
+        }
+        setUserAllowedRoutes(userAllowedRoutes);
+        setUserSidebarNavigation(sidebarNavigation);
+    }, [user, modules]);
+
+    useEffect(() => {
+        for (const module of modules) {
+            if (location.pathname.includes(module.module_route)) {
+                setTopbarNavigationLeft([...module.module_navigation]);
+                return;
+            }
+        }
+
+        setTopbarNavigationLeft([]);
+    }, [location, modules]);
 
     return (
         <>
@@ -44,16 +75,16 @@ const AppNavigation = () => {
                             description: user.first_name + " " + user.last_name,
                         },
                     ]}
-                    topbar_icons_left={[...BatteryManagerModule.module_navigation]}
+                    topbar_icons_left={topbarNavigationLeft}
                     sidebar_icons={[
                         {
                             name: t("sidebar.modules"),
-                            icons: [BatteryManagerModule.module_icon],
+                            icons: [...userSidebarNavigation],
                         },
                     ]}
                 >
                     <Routes>
-                        {BatteryManagerModule.module_routes}
+                        {userAllowedRoutes}
                         <Route path="/configuration" element={<ConfigurationsPage />} />
                     </Routes>
                 </PageNavigationProvider>

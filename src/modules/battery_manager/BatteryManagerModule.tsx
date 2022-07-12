@@ -12,18 +12,18 @@ const MODULE_CONFIGURATION = {
     },
     module_is_external: false,
     module_translation_prefix: "modules.battery_manager.",
+    module_permission: "MODULE_BATTERY_MANAGEMENT",
 };
 
-const BatteryManagerRouter = (
-    <>
-        <Route path={MODULE_CONFIGURATION.module_route} element={<BatteryManager />}></Route>
-        <Route path={MODULE_CONFIGURATION.module_route + MODULE_CONFIGURATION.module_subroutes.add_battery} element={<AddBatteryPage />}></Route>
-    </>
-);
+const BatteryManagerRouter = [
+    <Route path={MODULE_CONFIGURATION.module_route} key={MODULE_CONFIGURATION.module_permission + "_1"} element={<BatteryManager />}></Route>,
+    <Route path={MODULE_CONFIGURATION.module_route + MODULE_CONFIGURATION.module_subroutes.add_battery} key={MODULE_CONFIGURATION.module_permission + "_2"} element={<AddBatteryPage />}></Route>,
+];
 
 const BatteryManagerModule: ModuleInterface = {
     module_name: MODULE_CONFIGURATION.module_name,
     module_route: MODULE_CONFIGURATION.module_route,
+    module_permission: MODULE_CONFIGURATION.module_permission,
     module_is_external: false,
     module_icon: {
         icon: faBatteryFull,

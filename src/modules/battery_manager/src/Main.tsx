@@ -1,4 +1,4 @@
-import { faBattery0, faBatteryFull, faBatteryHalf, faBox, faBoxOpen, faDatabase, faTimes, faWarehouse } from "@fortawesome/free-solid-svg-icons";
+import { faBattery0, faBatteryFull, faBatteryHalf, faBox, faBoxOpen, faDatabase, faTimes } from "@fortawesome/free-solid-svg-icons";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { Grid } from "@mantine/core";
 import { showNotification } from "@mantine/notifications";

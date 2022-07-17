@@ -116,6 +116,55 @@
                         "in_use": "In Use"
                     }
                 }
+            },
+            "batteries": {
+                "header": "Batteries",
+                "search_error": {
+                    "title": "Error Fetching Batteries",
+                    "message": "Could not fetch batteries in the database!"
+                },
+
+                "search_card": {
+                    "title": "Search batteries",
+                    "search_by_provider": {
+                        "title": "Provider",
+                        "placeholder": "Select the battery provider"
+                    },
+                    "search_by_capacity": {
+                        "title": "Capacity",
+                        "placeholder": "Select the battery capacity"
+                    },
+                    "search_by_min_capacity": {
+                        "title": "Minimum Capacity"
+                    },
+                    "search_by_max_capacity": {
+                        "title": "Maximum Capacity"
+                    },
+                    "search_by_min_voltage": {
+                        "title": "Minimum Voltage"
+                    },
+                    "search_by_max_voltage": {
+                        "title": "Maximum Voltage"
+                    },
+                    "search_by_voltage": {
+                        "title": "Voltage",
+                        "placeholder": "Select the battery voltage"
+                    },
+                    "search_in_use": {
+                        "title": "Battery Status",
+                        "in_use": "In Use",
+                        "not_in_use": "Not in Use",
+                        "both": "All"
+                    },
+                    "search_by_type": {
+                        "title": "Type",
+                        "placeholder": "Select the battery type"
+                    },
+                    "search_button": "Search"
+                },
+                "display_card": {
+                    "title": "Batteries"
+                }
             }
         }
     }

@@ -9,13 +9,13 @@ const App = () => {
     return (
         <NotificationsProvider>
             <ThemeProvider>
-                <UserProvider>
-                    <UserAuthenticatedRequestsProvider>
-                        <BrowserRouter>
+                <BrowserRouter>
+                    <UserProvider>
+                        <UserAuthenticatedRequestsProvider>
                             <AppNavigation />
-                        </BrowserRouter>
-                    </UserAuthenticatedRequestsProvider>
-                </UserProvider>
+                        </UserAuthenticatedRequestsProvider>
+                    </UserProvider>
+                </BrowserRouter>
             </ThemeProvider>
         </NotificationsProvider>
     );

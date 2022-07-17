@@ -92,7 +92,7 @@ const RegisterPage = () => {
                     role: json.role,
                     permissions: json.permissions,
                     jwt_token: json.jwt,
-                    jwt_expiration_date: json.jwt_expiration_date,
+                    jwt_expiration_date: new Date(json.jwt_expiration_date),
                     first_name: json.first_name,
                     last_name: json.last_name,
                 });

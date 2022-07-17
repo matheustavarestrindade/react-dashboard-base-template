@@ -1,6 +1,7 @@
 import { LoadingOverlay } from "@mantine/core";
 import { useLocalStorage } from "@mantine/hooks";
 import { createContext, useCallback, useContext, useEffect, useState } from "react";
+import { useNavigate } from "react-router-dom";
 import configuration from "../ProjectConfiguration";
 const UserContext = createContext<IUserProvider>({
     user: undefined,
@@ -110,6 +111,7 @@ const UserProvider = ({ children }: Props) => {
     });
     const [loading, setLoading] = useState(true);
     const [user, setUser] = useState<IUser>();
+    const navigate = useNavigate();
 
     const loginUser = useCallback(
         (user: ILoginUser) => {
@@ -127,11 +129,12 @@ const UserProvider = ({ children }: Props) => {
         if (!updated) {
             setUser(undefined);
             setLoading(false);
+            navigate("/login");
             return;
         }
         setLoading(false);
         setUser(user);
-    }, [localJWT]);
+    }, [localJWT, navigate]);
 
     useEffect(() => {
         if (user) return;

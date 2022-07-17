@@ -1,4 +1,5 @@
 import { createContext, useCallback, useContext } from "react";
+import { useNavigate } from "react-router-dom";
 import { useUser } from "./UserProvider";
 
 const AuthenticatedRequestContext = createContext<{
@@ -57,7 +58,11 @@ export class UserAuthenticatedRequest<ExpectedParams extends { [key: string]: an
                 this.route +
                     (this.method === "GET" && this.requestBody !== undefined
                         ? Object.keys(this.requestBody)
-                              .map((key: string, id: number) => (id > 0 ? "&" : "?") + key + "=" + this.requestBody?.[key])
+                              .map((key: string, id: number) =>
+                                  this.requestBody?.[key] === undefined || this.requestBody?.[key] === "" || this.requestBody?.[key] == null
+                                      ? ""
+                                      : (id > 0 ? "&" : "?") + key + "=" + this.requestBody?.[key]
+                              )
                               .join("")
                         : ""),
                 {
@@ -124,16 +129,20 @@ export class UserAuthenticatedRequest<ExpectedParams extends { [key: string]: an
 
 const UserAuthenticatedRequestsProvider = ({ children }: Props) => {
     const { user } = useUser();
+    const navigate = useNavigate();
+
     const executeAuthenticatedRequest = useCallback(
         async (request: UserAuthenticatedRequest<any, any>) => {
             if (!user || !user.jwt_token) {
                 request.invalidate();
                 return request;
             }
+            console.log(user);
             if (user.jwt_expiration_date.getTime() < Date.now()) {
                 const success = await user.refreshToken();
                 if (!success) {
                     request.invalidate();
+                    navigate("/login");
                     return request;
                 }
             }
@@ -141,7 +150,7 @@ const UserAuthenticatedRequestsProvider = ({ children }: Props) => {
             await request.execute();
             return request;
         },
-        [user]
+        [navigate, user]
     );
     return <AuthenticatedRequestContext.Provider value={{ executeAuthenticatedRequest }}>{children}</AuthenticatedRequestContext.Provider>;
 };

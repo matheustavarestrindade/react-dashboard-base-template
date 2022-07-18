@@ -2,7 +2,13 @@ import { MultiSelect, SelectItem } from "@mantine/core";
 import { useEffect, useState } from "react";
 import useTranslation from "../../../../hooks/useTranslation";
 import BatteryManagerModule from "../../BatteryManagerModule";
-const BatteriesVoltageSearchInput = ({ onChange }: { onChange?: ({ min, max }: { min: number | undefined; max: number | undefined }) => void }) => {
+const BatteriesVoltageSearchInput = ({
+    value,
+    onChange,
+}: {
+    value?: { min: number | undefined; max: number | undefined };
+    onChange?: ({ min, max }: { min: number | undefined; max: number | undefined }) => void;
+}) => {
     const [capacitySearchValue, setCapacitySearchValue] = useState<string[]>([]);
 
     const { t } = useTranslation({ prefix: BatteryManagerModule.module_translation_prefix });
@@ -63,12 +69,23 @@ const BatteriesVoltageSearchInput = ({ onChange }: { onChange?: ({ min, max }: {
     useEffect(() => {
         if (typeof onChange === "function") onChange({ min, max });
     }, [min, max, onChange]);
+    useEffect(() => {
+        const capacityValues = [];
+        if (value?.min) {
+            capacityValues.push(`min_${value.min}`);
+        }
+        if (value?.max) {
+            capacityValues.push(`max_${value.max}`);
+        }
+        setCapacitySearchValue(capacityValues);
+    }, [value]);
 
     return (
         <MultiSelect
             placeholder={t("batteries.search_card.search_by_voltage.placeholder")}
             label={t("batteries.search_card.search_by_voltage.title")}
             maxSelectedValues={2}
+            defaultValue={capacitySearchValue}
             value={capacitySearchValue}
             onChange={setCapacitySearchValue}
             data={capacityValues}

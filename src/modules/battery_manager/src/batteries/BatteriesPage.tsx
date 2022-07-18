@@ -1,4 +1,4 @@
-import { faExclamation, faSearch } from "@fortawesome/free-solid-svg-icons";
+import { faExclamation, faSearch, faSoap } from "@fortawesome/free-solid-svg-icons";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { Box, Button, Card, Grid, LoadingOverlay, Radio, RadioGroup, Select, Text } from "@mantine/core";
 import { showNotification } from "@mantine/notifications";
@@ -8,7 +8,7 @@ import { useUserAuthenticatedRequest } from "../../../../context/UserAuthenticat
 import useTranslation from "../../../../hooks/useTranslation";
 import BatteryManagerModule from "../../BatteryManagerModule";
 import { BatteriesSearchQuery } from "../../queries/BatteriesSearchQuery";
-import { BatteryTypesQuery } from "../../queries/BatteryTypesQuery";
+import { BatteriesUserTypesAndProvidersQuery } from "../../queries/BatteriesUserTypesAndProvidersQuery";
 import BatteriesCapacitySearchInput from "./BatteriesCapacitySearchInput";
 import BatteriesVoltageSearchInput from "./BatteriesVoltageSearchInput";
 
@@ -20,10 +20,21 @@ const BatteriesPage = () => {
     const [providers, setProviders] = useState<string[]>([]);
     const [types, setTypes] = useState<string[]>([]);
 
+    const [status, setStatus] = useState<string>("0");
+    const [type, setType] = useState<string | null>("");
     const [provider, setProvider] = useState<string | null>("");
     const [page, setPage] = useState<number>(1);
     const [capacity, setCapacity] = useState<{ min: number | undefined; max: number | undefined }>({ max: undefined, min: undefined });
     const [voltage, setVoltage] = useState<{ min: number | undefined; max: number | undefined }>({ max: undefined, min: undefined });
+
+    const handleClear = useCallback(() => {
+        setProvider(null);
+        setCapacity({ max: undefined, min: undefined });
+        setVoltage({ max: undefined, min: undefined });
+        setPage(1);
+        setType(null);
+        setStatus("0");
+    }, []);
 
     const handleDatabaseSearch = useCallback(async () => {
         setLoading(true);
@@ -35,6 +46,8 @@ const BatteriesPage = () => {
             min_initial_voltage: voltage.min,
             max_initial_voltage: voltage.max,
             from: provider ? provider : undefined,
+            batteryType: type ? type : undefined,
+            inUse: status === "0" ? undefined : status === "1" ? true : false,
         });
         const response = await executeAuthenticatedRequest(request);
         if (response.hasError()) {
@@ -48,15 +61,35 @@ const BatteriesPage = () => {
             return;
         }
         setLoading(false);
-    }, [capacity.max, capacity.min, executeAuthenticatedRequest, page, provider, t, voltage.max, voltage.min]);
+    }, [capacity.max, capacity.min, executeAuthenticatedRequest, page, provider, status, t, type, voltage.max, voltage.min]);
 
-    const loadTypesAndProviders = useCallback(async () => {}, [executeAuthenticatedRequest]);
+    const loadTypesAndProviders = useCallback(async () => {
+        setLoading(true);
+        const request = new BatteriesUserTypesAndProvidersQuery();
+        const response = await executeAuthenticatedRequest(request);
+        console.log(response);
+        if (response.hasError()) {
+            showNotification({
+                title: t("batteries.search_error.title"),
+                message: t("batteries.search_error.message"),
+                icon: <FontAwesomeIcon icon={faExclamation} />,
+                color: "red",
+            });
+            setLoading(false);
+            return;
+        }
+        const result = response.getResult();
+        setProviders(result.user_providers);
+        setTypes(result.user_types);
+        setLoading(false);
+    }, [executeAuthenticatedRequest, t]);
 
     useEffect(() => {
         const debounce = setTimeout(() => {
-            handleDatabaseSearch();
+            loadTypesAndProviders();
         }, 500);
         return () => clearTimeout(debounce);
+        // eslint-disable-next-line react-hooks/exhaustive-deps
     }, []);
 
     return (
@@ -74,19 +107,26 @@ const BatteriesPage = () => {
                             label={t("batteries.search_card.search_by_provider.title")}
                             onChange={setProvider}
                             data={providers}
+                            value={provider}
                         />
                     </Grid.Col>
                     <Grid.Col md={4} lg={3}>
-                        <BatteriesCapacitySearchInput onChange={setCapacity} />
+                        <BatteriesCapacitySearchInput value={capacity} onChange={setCapacity} />
                     </Grid.Col>
                     <Grid.Col md={4} lg={3}>
-                        <BatteriesVoltageSearchInput onChange={setVoltage} />
+                        <BatteriesVoltageSearchInput value={voltage} onChange={setVoltage} />
                     </Grid.Col>
                     <Grid.Col md={4} lg={3}>
-                        <Select placeholder={t("batteries.search_card.search_by_type.placeholder")} label={t("batteries.search_card.search_by_type.title")} data={types} />
+                        <Select
+                            placeholder={t("batteries.search_card.search_by_type.placeholder")}
+                            label={t("batteries.search_card.search_by_type.title")}
+                            data={types}
+                            onChange={setType}
+                            value={type}
+                        />
                     </Grid.Col>
                     <Grid.Col md={4} lg={3} style={{ display: "flex", alignItems: "center" }}>
-                        <RadioGroup label={t("batteries.search_card.search_in_use.title")}>
+                        <RadioGroup value={status} onChange={setStatus} label={t("batteries.search_card.search_in_use.title")}>
                             <Radio value={"0"} label={t("batteries.search_card.search_in_use.both")} />
                             <Radio value={"1"} label={t("batteries.search_card.search_in_use.in_use")} />
                             <Radio value={"2"} label={t("batteries.search_card.search_in_use.not_in_use")} />
@@ -101,7 +141,10 @@ const BatteriesPage = () => {
                         justifyContent: "flex-end",
                     })}
                 >
-                    <Button type="button" leftIcon={<FontAwesomeIcon icon={faSearch} />}>
+                    <Button type="button" leftIcon={<FontAwesomeIcon icon={faSoap} />} mr={"sm"} onClick={handleClear}>
+                        {t("batteries.search_card.search_clear_button")}
+                    </Button>
+                    <Button type="button" leftIcon={<FontAwesomeIcon icon={faSearch} />} onClick={handleDatabaseSearch}>
                         {t("batteries.search_card.search_button")}
                     </Button>
                 </Box>

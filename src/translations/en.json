@@ -123,7 +123,6 @@
                     "title": "Error Fetching Batteries",
                     "message": "Could not fetch batteries in the database!"
                 },
-
                 "search_card": {
                     "title": "Search batteries",
                     "search_by_provider": {
@@ -160,7 +159,8 @@
                         "title": "Type",
                         "placeholder": "Select the battery type"
                     },
-                    "search_button": "Search"
+                    "search_button": "Search",
+                    "search_clear_button": "Clear"
                 },
                 "display_card": {
                     "title": "Batteries"

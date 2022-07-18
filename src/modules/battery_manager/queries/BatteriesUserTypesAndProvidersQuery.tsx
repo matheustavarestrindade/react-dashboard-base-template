@@ -10,5 +10,6 @@ export class BatteriesUserTypesAndProvidersQuery extends UserAuthenticatedReques
 interface BatteriesUserTypesAndProvidersQueryParams {}
 
 interface BatteriesUserTypesAndProvidersQueryResults {
-    [key: string]: string;
+    user_types: string[];
+    user_providers: string[];
 }

@@ -7,7 +7,7 @@ import { useUserAuthenticatedRequest } from "../../../../context/UserAuthenticat
 import useTranslation from "../../../../hooks/useTranslation";
 import BatteryManagerModule from "../../BatteryManagerModule";
 import { BatteryAddToDatabaseQuery } from "../../queries/BatteryAddToDatabaseQuery";
-import BatteryInterface from "../BatteryInterface";
+import { BatteryInterface } from "../BatteryTypes";
 import ScannedResult from "./ScannedResult";
 
 const ScannedBatteries = ({

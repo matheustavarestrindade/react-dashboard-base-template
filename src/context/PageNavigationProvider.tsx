@@ -4,9 +4,9 @@ import TopbarIcon from "../components/TopbarIcon";
 import { IconDefinition } from "@fortawesome/free-solid-svg-icons";
 import { Link, useLocation } from "react-router-dom";
 import useTranslation from "../hooks/useTranslation";
-import { useLocalStorageValue, useMediaQuery } from "@mantine/hooks";
+import { useLocalStorage, useMediaQuery } from "@mantine/hooks";
 
-const PageNavigationContext = createContext({});
+export const PageNavigationContext = createContext({});
 
 const SIDEBAR_SM_WIDTH = 250;
 const SIDEBAR_LG_WIDTH = 350;
@@ -178,7 +178,7 @@ const useStyles = createStyles((theme, { navbarOpened }: { navbarOpened: boolean
 }));
 
 const PageNavigationProvider = ({ children, topbar_icons_right, topbar_icons_left, sidebar_icons }: NavigationProps) => {
-    const [navbarOpened, setNarbarOpened] = useLocalStorageValue<boolean>({ key: "home-auto-navbar", defaultValue: true });
+    const [navbarOpened, setNarbarOpened] = useLocalStorage<boolean>({ key: "home-auto-navbar", defaultValue: true });
     const matches = useMediaQuery("(max-width: 768px)");
     const location = useLocation();
     const { t } = useTranslation();

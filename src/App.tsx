@@ -21,4 +21,18 @@ const App = () => {
     );
 };
 
+export const StoryApp = ({ children }: { children: React.ReactNode }) => {
+    return (
+        <NotificationsProvider>
+            <ThemeProvider>
+                <BrowserRouter>
+                    <UserProvider>
+                        <UserAuthenticatedRequestsProvider>{children}</UserAuthenticatedRequestsProvider>
+                    </UserProvider>
+                </BrowserRouter>
+            </ThemeProvider>
+        </NotificationsProvider>
+    );
+};
+
 export default App;

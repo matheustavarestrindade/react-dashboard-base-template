@@ -1,11 +1,11 @@
 import { ActionIcon, NumberInput, Select, Switch, TextInput } from "@mantine/core";
-import { useForm } from "@mantine/hooks";
 import useTranslation from "../../../../hooks/useTranslation";
 import BatteryManagerModule from "../../BatteryManagerModule";
-import BatteryInterface from "../BatteryInterface";
+import { BatteryInterface } from "../BatteryTypes";
 import { useEffect, useState } from "react";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faTrash } from "@fortawesome/free-solid-svg-icons";
+import { useForm } from "@mantine/form";
 const ScannedResult = ({
     battery,
     batteriesTypes,
@@ -51,7 +51,7 @@ const ScannedResult = ({
                     precision={1}
                     onChange={(e) => {
                         form.setFieldValue("initialVoltage", e || 0);
-                        form.onSubmit(setUpdatedBattery)();
+                        setUpdatedBattery(form.values);
                     }}
                     parser={(value) => value && value.replace(/[^\d.]/g, "")}
                     formatter={(value) => (value && !Number.isNaN(parseFloat(value)) ? `${value}v` : "")}
@@ -66,7 +66,7 @@ const ScannedResult = ({
                     value={form.getInputProps("dischargeRate").value}
                     onChange={(e) => {
                         form.setFieldValue("dischargeRate", e || 0);
-                        form.onSubmit(setUpdatedBattery)();
+                        setUpdatedBattery(form.values);
                     }}
                     parser={(value) => value && value.replace(/[^\d.]/g, "")}
                     formatter={(value) => (value && !Number.isNaN(parseFloat(value)) ? `${value}C` : "")}
@@ -79,7 +79,7 @@ const ScannedResult = ({
                     value={form.getInputProps("capacitymAh").value}
                     onChange={(e) => {
                         form.setFieldValue("capacitymAh", e || 0);
-                        form.onSubmit(setUpdatedBattery)();
+                        setUpdatedBattery(form.values);
                     }}
                     parser={(value) => value && value.replace(/\D/g, "")}
                     formatter={(value) => (value && !Number.isNaN(parseFloat(value)) ? `${value}mAh` : "")}
@@ -94,7 +94,7 @@ const ScannedResult = ({
                     placeholder={t("battery_from")}
                     onChange={(e) => {
                         form.setFieldValue("from", e.currentTarget.value);
-                        form.onSubmit(setUpdatedBattery)();
+                        setUpdatedBattery(form.values);
                     }}
                 ></TextInput>
             </td>
@@ -103,7 +103,7 @@ const ScannedResult = ({
                     variant="filled"
                     onChange={(e) => {
                         form.setFieldValue("batteryType", e || "LITHIUM_ION_18650");
-                        form.onSubmit(setUpdatedBattery)();
+                        setUpdatedBattery(form.values);
                     }}
                     placeholder={t("select_type_placeholder")}
                     searchable
@@ -122,7 +122,7 @@ const ScannedResult = ({
                     onChange={(e) => {
                         console.log("changed");
                         form.setFieldValue("inUse", e.currentTarget.checked);
-                        form.onSubmit(setUpdatedBattery)();
+                        setUpdatedBattery(form.values);
                     }}
                     defaultChecked={battery.inUse}
                     size="lg"

@@ -1,5 +1,5 @@
 import { Grid } from "@mantine/core";
-import BatteryInterface from "../BatteryInterface";
+import { BatteryInterface } from "../BatteryTypes";
 
 const BatteryFromDatabase = ({ battery }: { battery: BatteryInterface[] }) => {
     return (

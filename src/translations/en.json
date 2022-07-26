@@ -49,7 +49,6 @@
                 "register_btn": "Register",
                 "back_to_login_page": "Back to login page",
                 "login_page": "Login page",
-
                 "submit_error_message_user_already_exists": "An user with this e-mail already exists",
                 "submit_error": "We cannot process your request.",
                 "submit_error_message": "Internal error. Please try again later.",
@@ -163,7 +162,15 @@
                     "search_clear_button": "Clear"
                 },
                 "display_card": {
-                    "title": "Batteries"
+                    "title": "Batteries",
+                    "battery": {
+                        "in_use": "Used",
+                        "not_in_use": "Free",
+                        "subtitle": {
+                            "status": "Status",
+                            "type": "Battery Type"
+                        }
+                    }
                 }
             }
         }

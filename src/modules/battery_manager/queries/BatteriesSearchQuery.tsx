@@ -1,6 +1,6 @@
 import { UserAuthenticatedRequest } from "../../../context/UserAuthenticatedRequestsProvider";
 import configuration from "../../../ProjectConfiguration";
-import BatteryInterface from "../src/BatteryInterface";
+import { BatteryInterface } from "../src/BatteryTypes";
 
 export class BatteriesSearchQuery extends UserAuthenticatedRequest<BatteriesSearchQueryParams, BatteriesSearchQueryResults> {
     constructor() {

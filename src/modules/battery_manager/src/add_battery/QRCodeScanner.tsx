@@ -8,7 +8,7 @@ import { useUserAuthenticatedRequest } from "../../../../context/UserAuthenticat
 import useTranslation from "../../../../hooks/useTranslation";
 import BatteryManagerModule from "../../BatteryManagerModule";
 import { BatteryExistsOnDatabaseQuery } from "../../queries/BatteryExistsOnDatabaseQuery";
-import BatteryInterface from "../BatteryInterface";
+import { BatteryInterface } from "../BatteryTypes";
 
 interface QRCodeScannerInterface {
     addScannedBattery: (battery: BatteryInterface) => void;

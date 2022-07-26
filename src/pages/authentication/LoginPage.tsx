@@ -1,13 +1,13 @@
 import useTranslation from "../../hooks/useTranslation";
 import { Paper, createStyles, TextInput, PasswordInput, Checkbox, Button, Title, Text, Anchor, Group, LoadingOverlay } from "@mantine/core";
 import { Link } from "react-router-dom";
-import { useForm } from "@mantine/hooks";
 import { useCallback, useState } from "react";
 import configuration from "../../ProjectConfiguration";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faCheck, faExclamation } from "@fortawesome/free-solid-svg-icons";
 import { showNotification } from "@mantine/notifications";
 import { useUser } from "../../context/UserProvider";
+import { useForm } from "@mantine/form";
 
 const useStyles = createStyles((theme) => ({
     wrapper: {
@@ -53,11 +53,8 @@ const LoginPage = () => {
             email: "",
             password: "",
         },
-        errorMessages: {
-            email: t("invalid_email"),
-        },
-        validationRules: {
-            email: (value) => /^\w+([\\.-]?\w+)*@\w+([\\.-]?\w+)*(\.\w{2,3})+$/.test(value),
+        validate: {
+            email: (value) => (/^\w+([\\.-]?\w+)*@\w+([\\.-]?\w+)*(\.\w{2,3})+$/.test(value) ? null : t("invalid_email")),
         },
     });
 

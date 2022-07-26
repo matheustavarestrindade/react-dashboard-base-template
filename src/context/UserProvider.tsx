@@ -3,7 +3,7 @@ import { useLocalStorage } from "@mantine/hooks";
 import { createContext, useCallback, useContext, useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import configuration from "../ProjectConfiguration";
-const UserContext = createContext<IUserProvider>({
+export const UserContext = createContext<IUserProvider>({
     user: undefined,
     loginUser: (u) => null,
 });
@@ -95,6 +95,7 @@ class User implements IUser {
                 this.last_name = json.last_name;
                 return true;
             }
+            if (window.location.href.indexOf("/login") === -1) window.location.href = "/login";
         } catch (err) {}
         return false;
     }
@@ -109,7 +110,7 @@ const UserProvider = ({ children }: Props) => {
     const [localJWT, setLocalJWT] = useLocalStorage({
         key: "jwt_token",
     });
-    const [loading, setLoading] = useState(true);
+    const [loading, setLoading] = useState(false);
     const [user, setUser] = useState<IUser>();
     const navigate = useNavigate();
 
@@ -125,12 +126,18 @@ const UserProvider = ({ children }: Props) => {
         // load user from local storage
         setLoading(true);
         const user = new User(null, configuration.api.base_url + configuration.api.authentication.base_url + configuration.api.authentication.update_token);
-        const updated = await user.refreshUser(localJWT);
-        if (!updated) {
+        try {
+            const updated = await user.refreshUser(localJWT);
+            if (!updated) {
+                setUser(undefined);
+                setLoading(false);
+                navigate("/login");
+                return;
+            }
+        } catch (err) {
             setUser(undefined);
             setLoading(false);
             navigate("/login");
-            return;
         }
         setLoading(false);
         setUser(user);

@@ -2,7 +2,7 @@ import { createContext, useCallback, useContext } from "react";
 import { useNavigate } from "react-router-dom";
 import { useUser } from "./UserProvider";
 
-const AuthenticatedRequestContext = createContext<{
+export const AuthenticatedRequestContext = createContext<{
     executeAuthenticatedRequest: (request: UserAuthenticatedRequest<any, any>) => Promise<UserAuthenticatedRequest<any, any>>;
 }>({
     executeAuthenticatedRequest: async (request: UserAuthenticatedRequest<any, any>) => {

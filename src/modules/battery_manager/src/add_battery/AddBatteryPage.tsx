@@ -4,7 +4,7 @@ import BatteryManagerModule from "../../BatteryManagerModule";
 import { Card, Grid, Space, Text } from "@mantine/core";
 import { useCallback, useEffect, useState } from "react";
 import QRCodeScanner from "./QRCodeScanner";
-import BatteryInterface from "../BatteryInterface";
+import { BatteryInterface } from "../BatteryTypes";
 import ScannedBatteries from "./ScannedBatteries";
 import { useUserAuthenticatedRequest } from "../../../../context/UserAuthenticatedRequestsProvider";
 import { BatteryTypesQuery } from "../../queries/BatteryTypesQuery";

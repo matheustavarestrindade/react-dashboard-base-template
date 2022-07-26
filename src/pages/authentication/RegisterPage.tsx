@@ -1,13 +1,13 @@
 import { faArrowLeft, faCheck, faExclamation } from "@fortawesome/free-solid-svg-icons";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { createStyles, Paper, Title, Text, TextInput, Button, Container, Group, Anchor, Center, Box, Grid, PasswordInput, LoadingOverlay } from "@mantine/core";
-import { useForm } from "@mantine/hooks";
 import { showNotification } from "@mantine/notifications";
 import { useCallback, useState } from "react";
 import { Link } from "react-router-dom";
 import configuration from "../../ProjectConfiguration";
 import { useUser } from "../../context/UserProvider";
 import useTranslation from "../../hooks/useTranslation";
+import { useForm } from "@mantine/form";
 
 const useStyles = createStyles((theme) => ({
     title: {
@@ -44,17 +44,11 @@ const RegisterPage = () => {
             firstName: "",
             lastName: "",
         },
-        errorMessages: {
-            confirmPassword: t("password_mismatch"),
-            email: t("invalid_email"),
-            firstName: t("first_name_required"),
-            lastName: t("last_name_required"),
-        },
-        validationRules: {
-            email: (value) => /^\w+([\\.-]?\w+)*@\w+([\\.-]?\w+)*(\.\w{2,3})+$/.test(value),
-            confirmPassword: (value, values) => (values && value !== values.password ? false : true),
-            firstName: (value) => value.length > 2,
-            lastName: (value) => value.length > 2,
+        validate: {
+            email: (value) => (/^\w+([\\.-]?\w+)*@\w+([\\.-]?\w+)*(\.\w{2,3})+$/.test(value) ? null : t("invalid_email")),
+            confirmPassword: (value, values) => ((values && value !== values.password ? false : true) ? null : t("password_mismatch")),
+            firstName: (value) => (value.length > 2 ? null : t("first_name_required")),
+            lastName: (value) => (value.length > 2 ? null : t("last_name_required")),
         },
     });
 

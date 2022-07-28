@@ -16,44 +16,7 @@ const AddBatteryPage = () => {
     const { t } = useTranslation({ prefix: BatteryManagerModule.module_translation_prefix });
     const { executeAuthenticatedRequest } = useUserAuthenticatedRequest();
     const [batteriesTypes, setBatteriesTypes] = useState<{ [key: string]: string }>({});
-    const [scannedBatteries, setScannedBatteries] = useState<BatteryInterface[]>([
-        {
-            batteryId: 0,
-            capacitymAh: 1620,
-            dischargeRate: 0.5,
-            from: "hoverboard",
-            initialVoltage: 2.4,
-            batteryType: "LITHIUM_ION_18650",
-            inUse: false,
-        },
-        {
-            batteryId: 1,
-            capacitymAh: 1620,
-            dischargeRate: 0.5,
-            from: "hoverboard",
-            initialVoltage: 2.4,
-            batteryType: "LITHIUM_ION_18650",
-            inUse: false,
-        },
-        {
-            batteryId: 2,
-            capacitymAh: 1620,
-            dischargeRate: 0.5,
-            from: "hoverboard",
-            initialVoltage: 2.4,
-            batteryType: "LITHIUM_ION_18650",
-            inUse: false,
-        },
-        {
-            batteryId: 3,
-            capacitymAh: 1620,
-            dischargeRate: 0.5,
-            from: "hoverboard",
-            initialVoltage: 2.4,
-            batteryType: "LITHIUM_ION_18650",
-            inUse: false,
-        },
-    ]);
+    const [scannedBatteries, setScannedBatteries] = useState<BatteryInterface[]>([]);
 
     const addScannedBattery = useCallback((battery: BatteryInterface) => {
         setScannedBatteries((s) => {

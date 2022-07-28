@@ -77,10 +77,6 @@ const BatteriesCapacitySearchInput = ({
         setCapacitySearchValue(capacityValues);
     }, [value]);
 
-    console.log(capacitySearchValue);
-    console.log(capacityValues);
-    console.log(min);
-
     return (
         <MultiSelect
             placeholder={t("batteries.search_card.search_by_capacity.placeholder")}

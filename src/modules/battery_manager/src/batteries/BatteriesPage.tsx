@@ -1,4 +1,3 @@
-import { Card, Grid, Text } from "@mantine/core";
 import { useCallback, useState } from "react";
 import PageTitle from "../../../../components/PageTitle";
 import useTranslation from "../../../../hooks/useTranslation";
@@ -13,6 +12,7 @@ const BatteriesPage = () => {
     const [batteries, setBatteries] = useState<BatteryOrganizedByTypes>({});
     const handleQueryResults = useCallback((batteries: BatteryInterface[]) => {
         const organizedBatteries: BatteryOrganizedByTypes = {};
+
         for (const battery of batteries) {
             const type: EBatteryModel = battery.batteryType as EBatteryModel;
             if (!organizedBatteries[type]) {
@@ -20,6 +20,7 @@ const BatteriesPage = () => {
             }
             organizedBatteries[type]?.push(battery);
         }
+
         setBatteries(organizedBatteries);
     }, []);
 

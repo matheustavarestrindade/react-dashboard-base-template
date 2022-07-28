@@ -58,10 +58,10 @@ const Main = () => {
                     <InfoCard content={batteryResume ? batteryResume.batteries_capacity_mah_total : undefined} header={t("batteries_total_mah_title")} icon={faBatteryFull} />
                 </Grid.Col>
                 <Grid.Col sm={12} md={6} lg={4}>
-                    <InfoCard content={batteryResume ? batteryResume.batteries_capacity_mah_used : undefined} header={t("batteries_free_mah_title")} icon={faBatteryHalf} />
+                    <InfoCard content={batteryResume ? batteryResume.batteries_capacity_mah_unused : undefined} header={t("batteries_free_mah_title")} icon={faBatteryHalf} />
                 </Grid.Col>
                 <Grid.Col sm={12} md={6} lg={4}>
-                    <InfoCard content={batteryResume ? batteryResume.batteries_capacity_mah_unused : undefined} header={t("batteries_used_mah_title")} icon={faBattery0} />
+                    <InfoCard content={batteryResume ? batteryResume.batteries_capacity_mah_used : undefined} header={t("batteries_used_mah_title")} icon={faBattery0} />
                 </Grid.Col>
             </Grid>
         </>

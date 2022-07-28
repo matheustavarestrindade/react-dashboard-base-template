@@ -121,8 +121,8 @@ const BatteriesSearchFilter = ({ handleQueryResults }: { handleQueryResults: (ba
                 <Grid.Col md={4} lg={3} style={{ display: "flex", alignItems: "center" }}>
                     <Radio.Group value={status} onChange={setStatus} label={t("batteries.search_card.search_in_use.title")}>
                         <Radio value={"0"} label={t("batteries.search_card.search_in_use.both")} />
-                        <Radio value={"1"} label={t("batteries.search_card.search_in_use.in_use")} />
                         <Radio value={"2"} label={t("batteries.search_card.search_in_use.not_in_use")} />
+                        <Radio value={"1"} label={t("batteries.search_card.search_in_use.in_use")} />
                     </Radio.Group>
                 </Grid.Col>
             </Grid>

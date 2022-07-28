@@ -15,6 +15,7 @@ interface IProjectConfigurations {
             battery_resume: string;
             search_route: string;
             battery_types_and_porviders: string;
+            update: string;
         };
     };
 }
@@ -36,6 +37,7 @@ export default Object.freeze({
             battery_resume: "/resume",
             search_route: "/search",
             battery_types_and_porviders: "/user_types_and_providers",
+            update: "/update",
         },
     },
 }) as IProjectConfigurations;

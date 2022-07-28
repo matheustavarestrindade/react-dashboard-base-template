@@ -33,7 +33,7 @@ interface UserAuthenticatedRequestError {
 
 export class UserAuthenticatedRequest<ExpectedParams extends { [key: string]: any }, ExpectedResult> implements IUserAuthenticatedRequest<ExpectedResult> {
     private route: string;
-    private method: "GET" | "POST" | "PUT" | "DELETE";
+    private method: "GET" | "POST" | "PUT" | "DELETE" | "PATCH";
     private JWTToken: string | undefined;
 
     private requestBody: ExpectedParams | undefined;
@@ -43,7 +43,7 @@ export class UserAuthenticatedRequest<ExpectedParams extends { [key: string]: an
     private error: boolean;
     private errorMessage: UserAuthenticatedRequestError | undefined;
 
-    constructor(method: "GET" | "POST" | "PUT" | "DELETE", route: string) {
+    constructor(method: "GET" | "POST" | "PUT" | "DELETE" | "PATCH", route: string) {
         this.method = method;
         this.route = route;
         this.error = false;
@@ -74,11 +74,14 @@ export class UserAuthenticatedRequest<ExpectedParams extends { [key: string]: an
                     },
                 }
             );
-            const json = await response.json();
             if (response.status === 200) {
-                this.resultObject = json;
-                this.result = true;
+                if (response.headers.get("Content-Type") === "application/json") {
+                    const json = await response.json();
+                    this.resultObject = json;
+                    this.result = true;
+                }
             } else {
+                const json = await response.json();
                 this.error = true;
                 this.errorMessage = {
                     message: json.message,
@@ -137,7 +140,6 @@ const UserAuthenticatedRequestsProvider = ({ children }: Props) => {
                 request.invalidate();
                 return request;
             }
-            console.log(user);
             if (user.jwt_expiration_date.getTime() < Date.now()) {
                 const success = await user.refreshToken();
                 if (!success) {

@@ -94,7 +94,7 @@ const BatteriesSearchFilter = ({ handleQueryResults }: { handleQueryResults: (ba
     }, []);
 
     return (
-        <Card>
+        <Card style={{ overflow: "visible" }}>
             <LoadingOverlay visible={loading} />
             <Text weight={500} mb={"lg"}>
                 {t("batteries.search_card.title")}

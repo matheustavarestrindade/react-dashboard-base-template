@@ -162,7 +162,6 @@
                     "search_clear_button": "Clear"
                 },
                 "display_card": {
-                    "title": "Batteries",
                     "battery": {
                         "in_use": "Used",
                         "not_in_use": "Free",
@@ -184,6 +183,18 @@
                             "mark_as_free": "Mark as free"
                         }
                     }
+                },
+                "edit_battery_modal": {
+                    "title": "Editing Battery With ID:",
+                    "select_type_placeholder": "Select the type of battery",
+                    "select_type_nothing_found": "No battery type found",
+                    "switch_on": "Yes",
+                    "switch_off": "No",
+                    "battery_initial_voltage": "Initial voltage",
+                    "battery_discharge_rate": "Discharge rate",
+                    "battery_capacity": "Capacity",
+                    "battery_from": "From",
+                    "battery_in_use": "In Use"
                 }
             }
         }

@@ -108,7 +108,7 @@ const ScannedResult = ({
                     placeholder={t("select_type_placeholder")}
                     searchable
                     nothingFound={t("select_type_nothing_found")}
-                    defaultValue={form.getInputProps("batteryType").value}
+                    value={form.getInputProps("batteryType").value}
                     data={Object.keys(batteriesTypes)
                         .map((key) => ({ value: key, label: batteriesTypes[key] }))
                         .sort((a, b) => a.value.localeCompare(b.value))}

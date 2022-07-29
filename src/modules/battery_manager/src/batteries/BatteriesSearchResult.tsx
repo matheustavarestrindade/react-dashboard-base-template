@@ -22,10 +22,7 @@ const BatteriesSearchResult = ({ batteries }: { batteries?: BatteryOrganizedByTy
     return (
         <>
             {batteries && defaultTab && (
-                <Card mt={"lg"} pb={50}>
-                    <Text weight={500} mb={"lg"}>
-                        {t("display_card.title")}
-                    </Text>
+                <Card mt={"lg"} pb={50} style={{ overflow: "visible" }}>
                     <Tabs value={defaultTab} onTabChange={setDefaultTab}>
                         <Tabs.List>
                             {batteries &&

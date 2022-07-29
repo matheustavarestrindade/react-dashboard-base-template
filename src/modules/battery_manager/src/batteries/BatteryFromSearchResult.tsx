@@ -2,12 +2,13 @@ import { faBatteryEmpty, faBatteryFull, faBatteryHalf, faBolt, faCheck, faEdit, 
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { Card, Text, Grid, Col, createStyles, RingProgress, Tooltip, Burger, Menu, LoadingOverlay } from "@mantine/core";
 import { showNotification } from "@mantine/notifications";
-import { useCallback, useState } from "react";
+import { useCallback, useEffect, useState } from "react";
 import { useUserAuthenticatedRequest } from "../../../../context/UserAuthenticatedRequestsProvider";
 import useTranslation from "../../../../hooks/useTranslation";
 import BatteryManagerModule from "../../BatteryManagerModule";
 import { BatteryUpdateQuery } from "../../queries/BatteryUpdateQuery";
 import { BatteryInterface } from "../BatteryTypes";
+import BatteryEdit from "./BatteryEdit";
 
 const useStyles = createStyles((theme) => ({
     card: {
@@ -59,34 +60,35 @@ const BatteryFromSearchResult = ({ battery: outBattery }: { battery: BatteryInte
     const [battery, setBattery] = useState<BatteryInterface>(outBattery);
     const [helpOpen, setHelpOpen] = useState<boolean>(false);
     const [loading, setLoading] = useState<boolean>(false);
+    const [editing, setEditing] = useState<boolean>(false);
 
     const handleBatteryUpdate = useCallback(
         async ({
             dischargeRate,
-            initial_voltage,
-            capacity,
+            initialVoltage,
+            capacitymAh,
             from,
             batteryType,
             inUse,
         }: {
             dischargeRate?: number;
-            initial_voltage?: number;
-            capacity?: number;
+            initialVoltage?: number;
+            capacitymAh?: number;
             from?: string;
             batteryType?: string;
             inUse?: boolean;
         }) => {
-            const updatedBattery = battery;
+            const updatedBattery: BatteryInterface = { ...battery };
             setLoading(true);
             if (dischargeRate !== undefined) updatedBattery.dischargeRate = dischargeRate;
-            if (initial_voltage !== undefined) updatedBattery.initialVoltage = initial_voltage;
-            if (capacity !== undefined) updatedBattery.capacitymAh = capacity;
+            if (initialVoltage !== undefined) updatedBattery.initialVoltage = initialVoltage;
+            if (capacitymAh !== undefined) updatedBattery.capacitymAh = capacitymAh;
             if (from !== undefined) updatedBattery.from = from;
             if (batteryType !== undefined) updatedBattery.batteryType = batteryType;
             if (inUse !== undefined) updatedBattery.inUse = inUse;
 
             const updateQuery = new BatteryUpdateQuery();
-            updateQuery.setRequestBody(battery);
+            updateQuery.setRequestBody(updatedBattery);
 
             const response = await executeAuthenticatedRequest(updateQuery);
 
@@ -100,17 +102,23 @@ const BatteryFromSearchResult = ({ battery: outBattery }: { battery: BatteryInte
                 setLoading(false);
                 return;
             }
+
             showNotification({
                 title: t("update_success.title"),
                 message: t("update_success.message"),
                 icon: <FontAwesomeIcon icon={faCheck} />,
                 color: "green",
             });
-            setLoading(false);
+            console.log("Updated battery: ", updatedBattery);
             setBattery(updatedBattery);
+            setLoading(false);
         },
         [battery, executeAuthenticatedRequest, t]
     );
+
+    useEffect(() => {
+        console.log("bat ", battery);
+    }, [battery]);
 
     return (
         <Col span={12} sm={6} md={6} lg={4} p="lg" style={{ position: "relative" }}>
@@ -165,7 +173,9 @@ const BatteryFromSearchResult = ({ battery: outBattery }: { battery: BatteryInte
                                     {t("dropdown.initial_voltage")}: {battery.initialVoltage} V
                                 </Menu.Item>
                                 <Menu.Label>{t("subtitle.edit")}</Menu.Label>
-                                <Menu.Item icon={<FontAwesomeIcon icon={faEdit} />}>{t("dropdown.edit")}</Menu.Item>
+                                <Menu.Item icon={<FontAwesomeIcon icon={faEdit} />} onClick={() => setEditing(true)}>
+                                    {t("dropdown.edit")}
+                                </Menu.Item>
                                 <Menu.Item
                                     icon={<FontAwesomeIcon icon={faThumbTack} />}
                                     onClick={() => {
@@ -180,6 +190,19 @@ const BatteryFromSearchResult = ({ battery: outBattery }: { battery: BatteryInte
                     </div>
                 </div>
             </Card>
+            {editing && (
+                <BatteryEdit
+                    battery={battery}
+                    onBatteryEdit={(hasChanged: boolean, battery: BatteryInterface) => {
+                        console.log(battery);
+                        if (hasChanged) {
+                            handleBatteryUpdate(battery);
+                        }
+                        setHelpOpen(false);
+                        setEditing(false);
+                    }}
+                />
+            )}
         </Col>
     );
 };

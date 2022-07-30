@@ -1,13 +1,10 @@
 import { Card, Grid, Tabs } from "@mantine/core";
 import { useEffect, useState } from "react";
-import useTranslation from "../../../../hooks/useTranslation";
-import BatteryManagerModule from "../../BatteryManagerModule";
 import { BatteryInterface, BatteryOrganizedByTypes } from "../BatteryTypes";
 import { EBatteryModel } from "../BatteryTypes";
 import BatteryFromSearchResult from "./BatteryFromSearchResult";
 
 const BatteriesSearchResult = ({ batteries }: { batteries?: BatteryOrganizedByTypes }) => {
-    const { t } = useTranslation({ prefix: BatteryManagerModule.module_translation_prefix + "batteries" });
     const [defaultTab, setDefaultTab] = useState<string | null>();
 
     useEffect(() => {

@@ -54,6 +54,7 @@ const useStyles = createStyles((theme, { navbarOpened }: { navbarOpened: boolean
         borderLeft: "5px solid transparent",
         fontWeight: 500,
         paddingLeft: "0.4rem",
+        marginBottom: "0.5rem",
         ".description": {
             paddingLeft: "0.5rem",
         },

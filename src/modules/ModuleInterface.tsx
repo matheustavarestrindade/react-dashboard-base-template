@@ -5,6 +5,7 @@ export default interface ModuleInterface {
 
     module_route: string;
     module_is_external: boolean;
+    module_external_url?: string;
 
     module_icon: NavigationItem;
     module_navigation: NavigationItem[];

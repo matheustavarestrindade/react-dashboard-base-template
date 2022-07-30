@@ -1,4 +1,4 @@
-import { Card, Text, Grid, Tabs } from "@mantine/core";
+import { Card, Grid, Tabs } from "@mantine/core";
 import { useEffect, useState } from "react";
 import useTranslation from "../../../../hooks/useTranslation";
 import BatteryManagerModule from "../../BatteryManagerModule";

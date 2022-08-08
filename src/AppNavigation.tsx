@@ -6,6 +6,7 @@ import { useUser } from "./context/UserProvider";
 import useTranslation from "./hooks/useTranslation";
 import BatteryManagerModule from "./modules/battery_manager/BatteryManagerModule";
 import MinerSystemModule from "./modules/miner_system/MinerSystemModule";
+import DocumentsModule from "./modules/documents/DocumentsModule";
 import ModuleInterface from "./modules/ModuleInterface";
 import ForgotPassword from "./pages/authentication/ForgotPassword";
 import LoginPage from "./pages/authentication/LoginPage";
@@ -18,7 +19,7 @@ const AppNavigation = () => {
     const navigate = useNavigate();
     const location = useLocation();
 
-    const [modules] = useState<ModuleInterface[]>([BatteryManagerModule, MinerSystemModule]);
+    const [modules] = useState<ModuleInterface[]>([BatteryManagerModule, MinerSystemModule, DocumentsModule]);
     const [topbarNavigationLeft, setTopbarNavigationLeft] = useState<NavigationItem[]>([]);
 
     const [userAllowedRoutes, setUserAllowedRoutes] = useState<React.ReactElement[]>([]);

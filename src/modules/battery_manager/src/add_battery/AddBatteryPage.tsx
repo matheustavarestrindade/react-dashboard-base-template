@@ -13,6 +13,7 @@ import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faExclamation } from "@fortawesome/free-solid-svg-icons";
 
 const AddBatteryPage = () => {
+    
     const { t } = useTranslation({ prefix: BatteryManagerModule.module_translation_prefix });
     const { executeAuthenticatedRequest } = useUserAuthenticatedRequest();
     const [batteriesTypes, setBatteriesTypes] = useState<{ [key: string]: string }>({});

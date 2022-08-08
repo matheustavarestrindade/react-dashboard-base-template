@@ -197,6 +197,20 @@
                     "battery_in_use": "In Use"
                 }
             }
+        },
+        "documents": {
+            "main": {
+                "header": "Documents"
+            },
+            "scanner": {
+                "header": "Scanner",
+                "script_loading_title": "Loading OpenCV script",
+                "script_loading_message": "Please wait while the script is loading",
+                "script_loading_error_title": "Error loading script",
+                "script_loading_error_message": "An error occurred while loading the script",
+                "script_loaded_title": "Script loaded",
+                "script_loaded_message": "The OpenCV script has been loaded"
+            }
         }
     }
 }

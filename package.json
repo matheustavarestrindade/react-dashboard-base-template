@@ -8,16 +8,17 @@
         "@fortawesome/free-regular-svg-icons": "^6.1.1",
         "@fortawesome/free-solid-svg-icons": "^6.1.1",
         "@fortawesome/react-fontawesome": "^0.1.18",
-        "@mantine/core": "^5.0.0",
-        "@mantine/dates": "^4.2.2",
-        "@mantine/dropzone": "^4.2.2",
-        "@mantine/form": "^5.0.0",
-        "@mantine/hooks": "^5.0.0",
-        "@mantine/modals": "^4.2.2",
-        "@mantine/next": "^4.2.2",
-        "@mantine/notifications": "^4.2.2",
-        "@mantine/rte": "^3.4.3",
-        "@mantine/spotlight": "^4.2.2",
+        "@mantine/carousel": "^5.1.6",
+        "@mantine/core": "^5.1.1",
+        "@mantine/dates": "^5.1.1",
+        "@mantine/dropzone": "^5.1.1",
+        "@mantine/form": "^5.1.1",
+        "@mantine/hooks": "^5.1.1",
+        "@mantine/modals": "^5.1.1",
+        "@mantine/next": "^5.1.1",
+        "@mantine/notifications": "^5.1.1",
+        "@mantine/rte": "^5.1.1",
+        "@mantine/spotlight": "^5.1.1",
         "@testing-library/jest-dom": "^5.16.4",
         "@testing-library/react": "^13.1.1",
         "@testing-library/user-event": "^13.5.0",
@@ -26,12 +27,13 @@
         "@types/react": "^18.0.8",
         "@types/react-dom": "^18.0.0",
         "dayjs": "^1.11.1",
+        "document-scanner-opencv": "^1.0.35",
         "qr-scanner": "^1.4.1",
         "react": "^18.1.0",
         "react-dom": "^18.1.0",
+        "react-image-perspective-cropper": "^0.1.7",
         "react-router-dom": "^6.3.0",
         "react-scripts": "^5.0.1",
-        "storybook-react-context": "^0.6.0",
         "styled-components": "^5.3.5",
         "typescript": "^4.6.4",
         "web-vitals": "^2.1.4"
@@ -40,24 +42,12 @@
         "start": "react-scripts start",
         "build": "react-scripts build",
         "test": "react-scripts test",
-        "eject": "react-scripts eject",
-        "storybook": "start-storybook -p 6006 -s public",
-        "build-storybook": "build-storybook -s public"
+        "eject": "react-scripts eject"
     },
     "eslintConfig": {
         "extends": [
             "react-app",
             "react-app/jest"
-        ],
-        "overrides": [
-            {
-                "files": [
-                    "**/*.stories.*"
-                ],
-                "rules": {
-                    "import/no-anonymous-default-export": "off"
-                }
-            }
         ]
     },
     "browserslist": {
@@ -73,16 +63,6 @@
         ]
     },
     "devDependencies": {
-        "@storybook/addon-actions": "^6.5.9",
-        "@storybook/addon-essentials": "^6.4.22",
-        "@storybook/addon-interactions": "^6.5.9",
-        "@storybook/addon-links": "^6.5.9",
-        "@storybook/builder-webpack5": "^6.5.9",
-        "@storybook/manager-webpack5": "^6.5.9",
-        "@storybook/node-logger": "^6.5.9",
-        "@storybook/preset-create-react-app": "^1.2.0",
-        "@storybook/react": "^6.1.21",
-        "@storybook/testing-library": "^0.0.13",
         "babel-plugin-named-exports-order": "^0.0.2",
         "prop-types": "^15.8.1",
         "webpack": "^5.74.0"

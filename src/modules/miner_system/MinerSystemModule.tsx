@@ -13,7 +13,7 @@ const MODULE_CONFIGURATION = {
     module_permission: "MODULE_MINER_SYSTEM",
 };
 
-const MinerSystemRouter = [<Route path={MODULE_CONFIGURATION.module_route} element={<MinerSystemRedirect />} />];
+const MinerSystemRouter = [<Route path={MODULE_CONFIGURATION.module_route} key={MODULE_CONFIGURATION.module_permission + "_1"} element={<MinerSystemRedirect />} />];
 
 const MinerSystemModule: ModuleInterface = {
     module_name: MODULE_CONFIGURATION.module_name,

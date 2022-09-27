@@ -212,10 +212,15 @@
                 "scan_card": {
                     "title": "Scan your document ",
                     "description": "Please scan the document with your camera",
-                    "scan_now": "Scan now"
+                    "scan_now": "Scan now",
+                    "loading_scanner": "Loading scanner",
+                    "upload_now": "Upload now"
                 },
                 "results_card": {
                     "title": "Scanned Documents"
+                },
+                "scan_results": {
+                    "scans": "Document Scans"
                 },
                 "scanned_result": {
                     "delete_confirmation": "Are you sure you want to delete this document?",

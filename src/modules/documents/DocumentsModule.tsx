@@ -1,4 +1,4 @@
-import { faBatteryFull, faFileImport, faFolder, faHome } from "@fortawesome/free-solid-svg-icons";
+import { faFileImport, faFolder, faHome } from "@fortawesome/free-solid-svg-icons";
 import { Route } from "react-router-dom";
 import ModuleInterface from "../ModuleInterface";
 import DocumentsModule from "./src/DocumentsModule";

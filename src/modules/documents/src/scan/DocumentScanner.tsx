@@ -1,4 +1,4 @@
-import { faCamera, faCheck, faTimes } from "@fortawesome/free-solid-svg-icons";
+import { faCamera, faCheck, faPlusCircle, faTimes, faUpload } from "@fortawesome/free-solid-svg-icons";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { showNotification, updateNotification } from "@mantine/notifications";
 import { useCallback, useEffect, useState } from "react";
@@ -6,12 +6,12 @@ import PageTitle from "../../../../components/PageTitle";
 import useScript from "../../../../hooks/useScript";
 import useTranslation from "../../../../hooks/useTranslation";
 import DocumentsModuleConfig from "../../DocumentsModule";
-import { Button, Card, Col, Grid, LoadingOverlay, Modal, Text } from "@mantine/core";
+import { Button, Card, Col, Grid, Loader, LoadingOverlay, Modal, Text } from "@mantine/core";
 import OpenCVScanner from "./OpenCVScanner";
 import ScannedResults from "./ScannedResults";
 import IScannedImage, { IScannedDocument } from "./IScannedImage";
 import useUUID from "../../../../hooks/useUUID";
-
+import { Dropzone } from "@mantine/dropzone";
 const DocumentScanner = () => {
     const { t } = useTranslation({ prefix: DocumentsModuleConfig.module_translation_prefix + "scanner" });
     const [loading, error] = useScript({ src: "https://docs.opencv.org/4.6.0/opencv.js", checkForExisting: true });
@@ -69,45 +69,52 @@ const DocumentScanner = () => {
 
     return (
         <>
-            <PageTitle>{t("header")}</PageTitle>
-            <Card>
-                <LoadingOverlay visible={loading} />
-                <Text weight={500} mb={"lg"}>
-                    {t("scan_card.title")}
-                </Text>
-                <Grid>
-                    <Col>
-                        <Text>{t("scan_card.description")}</Text>
-                    </Col>
-                    <Col>
-                        {!loading && (
-                            <Button onClick={() => setScanning(true)}>
-                                <FontAwesomeIcon icon={faCamera} style={{ marginRight: "0.5rem" }} /> {t("scan_card.scan_now")}
-                            </Button>
-                        )}
+            <PageTitle>
+                <Grid p={0} gutter={0} grow justify={"space-between"}>
+                    <Col span={4}>{t("header")}</Col>
+                    <Col span={4} style={{ display: "flex", alignItems: "flex-end", justifyContent: "end" }}>
+                        <Button
+                            color={"green.9"}
+                            onClick={() => {
+                                if (loading) return;
+                                setScanning(true);
+                            }}
+                            style={{ marginRight: "0.5rem" }}
+                        >
+                            {loading && <Loader color={"white"} size={"sm"} style={{ marginRight: "0.5rem" }} />}
+                            {loading && t("scan_card.loading_scanner")}
+                            {!loading && <FontAwesomeIcon icon={faPlusCircle} style={{ marginRight: "0.5rem" }} />}
+                            {!loading && t("scan_card.scan_now")}
+                        </Button>
+                        <Dropzone style={{ fontSize: "14px", whiteSpace: "nowrap" }} padding={6} onDrop={(file) => console.log(file)} color={"green.9"}>
+                            {loading && <Loader color={"white"} size={"sm"} style={{ marginRight: "0.5rem" }} />}
+                            {loading && t("scan_card.loading_scanner")}
+                            {!loading && <FontAwesomeIcon icon={faUpload} style={{ marginRight: "0.5rem" }} />}
+                            {!loading && t("scan_card.upload_now")}
+                        </Dropzone>
                     </Col>
                 </Grid>
-                <Modal fullScreen opened={scanning} onClose={() => setScanning(false)} style={{ background: "transparent" }}>
-                    {!loading && scanning && (
-                        <OpenCVScanner
-                            closeModal={() => setScanning(false)}
-                            onFinishScan={(scannedImages: IScannedImage[]) => {
-                                if (scannedImages && scannedImages.length > 0)
-                                    setScannedDocuments((scannedDocuments) => [
-                                        ...scannedDocuments,
-                                        { scanned_images: scannedImages, title: "Edit Document Title", description: "", category: "", uuid: generateUUID() },
-                                    ]);
-                            }}
-                        />
-                    )}
-                </Modal>
-            </Card>
-            <Card mt={"lg"}>
-                <Text weight={500} mb={"lg"}>
-                    {t("results_card.title")}
-                </Text>
-                {scannedDocuments && scannedDocuments.map((document, id) => <ScannedResults key={id} document={document} deleteDocumentFile={deleteDocumentFile} />)}
-            </Card>
+            </PageTitle>
+            <Modal fullScreen opened={scanning} onClose={() => setScanning(false)} style={{ background: "transparent" }}>
+                {!loading && scanning && (
+                    <OpenCVScanner
+                        closeModal={() => setScanning(false)}
+                        onFinishScan={(scannedImages: IScannedImage[]) => {
+                            if (scannedImages && scannedImages.length > 0)
+                                setScannedDocuments((scannedDocuments) => [
+                                    ...scannedDocuments,
+                                    { scanned_images: scannedImages, title: "Edit Document Title", description: "", category: "", uuid: generateUUID() },
+                                ]);
+                        }}
+                    />
+                )}
+            </Modal>
+            {(scannedDocuments.length > 0 && (
+                <Card>
+                    <Text weight={500}>{t("scan_results.scans")}</Text>
+                    {scannedDocuments.length > 0 && scannedDocuments.map((document, id) => <ScannedResults key={id} document={document} deleteDocumentFile={deleteDocumentFile} />)}
+                </Card>
+            )) || <></>}
         </>
     );
 };
